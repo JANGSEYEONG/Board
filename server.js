@@ -7,8 +7,10 @@ const app = express()
 
 const Keys = require('./keys.js')
 
-let db;
 const url = Keys.DBURL;
+
+let db;
+
 new MongoClient(url).connect().then((client)=>{
     console.log('DB연결성공')
     db = client.db('forum')
@@ -21,6 +23,9 @@ new MongoClient(url).connect().then((client)=>{
 }).catch((err)=>{
     console.log(err)
 })
+
+// ejs 템플릿 엔진 세팅
+app.set('view engine', 'ejs') 
 
 // public 폴더 등록
 // app.use(express.static(__dirname + '/public'));
@@ -36,7 +41,7 @@ app.get('/', (req, res) => {
 
 app.get('/news', (req, res) => {
     res.send('뉴스입니다')
-    //db.collection('post').insertOne({title : '어쩌구'})
+    //db.collection('post').insertOne({title : '게시글3', content: '내용333'})
 }) 
 
 
@@ -47,3 +52,10 @@ app.get('/shop', (req, res) => {
 app.get('/about', (req, res) => {
     res.sendFile(__dirname + '/introduce.html')
 }) 
+
+app.get('/list', async (req,res)=>{
+    const result = await db.collection('post').find().toArray();
+    // res.send(result[0].title)
+    console.log(result[0])
+    res.render('list.ejs', {lists : result})
+})

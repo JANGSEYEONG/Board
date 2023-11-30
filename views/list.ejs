@@ -4,14 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/list.css">
+  <link rel="stylesheet" href="/index.css">
 
   <title>Document</title>
 </head>
 <body class="grey-bg">
 
+  <%- include('nav.ejs') %>
   <div class="white-bg">
-    <% lists.forEach(list=>{ %>
+    <% lists.map(list=>{ %>
         <div class="list-box">
           <h4><%= list.title %></h4>
           <p><%= list.content %></p>

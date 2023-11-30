@@ -44,7 +44,6 @@ app.get('/news', (req, res) => {
     //db.collection('post').insertOne({title : '게시글3', content: '내용333'})
 }) 
 
-
 app.get('/shop', (req, res) => {
     res.send('쇼핑페이지입니다~')
 }) 
@@ -58,4 +57,8 @@ app.get('/list', async (req,res)=>{
     // res.send(result[0].title)
     console.log(result[0])
     res.render('list.ejs', {lists : result})
+})
+
+app.get('/time', async (req,res)=>{ 
+    res.render('time.ejs', {time : new Date()})
 })

@@ -31,12 +31,47 @@ app.set('view engine', 'ejs')
 // app.use(express.static(__dirname + '/public'));
 app.use(express.static(path.join(__dirname, 'public'))); 
 
+// 유저가 보낸 데이터 쉽게 꺼내쓸 수 있게 use 설정 (req.body)
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 
 app.get('/', (req, res) => {
     // html 같은 파일 보내기
     // __dirname : 현재 server.js 파일의 절대경로
     res.sendFile(__dirname + '/index.html')
 }) 
+
+
+// 리스트 조회
+app.get('/list', async (req,res)=>{
+    const result = await db.collection('post').find().toArray();
+    // res.send(result[0].title)
+    //console.log(result[0])
+    res.render('list.ejs', {lists : result})
+})
+
+app.get('/write', async (req,res)=>{
+
+    res.render('write.ejs')
+})
+
+// 글 등록
+app.post('/add', async (req,res)=>{
+
+    console.log(req.body)
+    // db.collection('post').insertOne({title : '게시글3', content: '내용333'})
+
+    // const result = await db.collection('post').find().toArray();
+    // res.render('list.ejs', {lists : result})
+    await db.collection('post').insertOne({title : req.body.title, content: req.body.content})
+
+    return res.redirect('/list')
+})
+
+
+app.get('/time', async (req,res)=>{ 
+    res.render('time.ejs', {time : new Date()})
+})
 
 
 app.get('/news', (req, res) => {
@@ -51,14 +86,3 @@ app.get('/shop', (req, res) => {
 app.get('/about', (req, res) => {
     res.sendFile(__dirname + '/introduce.html')
 }) 
-
-app.get('/list', async (req,res)=>{
-    const result = await db.collection('post').find().toArray();
-    // res.send(result[0].title)
-    console.log(result[0])
-    res.render('list.ejs', {lists : result})
-})
-
-app.get('/time', async (req,res)=>{ 
-    res.render('time.ejs', {time : new Date()})
-})

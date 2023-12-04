@@ -1,6 +1,8 @@
 
 const path = require('path')
+
 const {MongoClient} = require('mongodb')
+const { ObjectId } = require('mongodb') 
 
 const express = require('express')
 const app = express()
@@ -44,10 +46,18 @@ app.get('/', (req, res) => {
 
 // 리스트 조회
 app.get('/list', async (req,res)=>{
-    const result = await db.collection('post').find().toArray();
-    // res.send(result[0].title)
-    //console.log(result[0])
-    res.render('list.ejs', {lists : result})
+
+    try {
+        const result = await db.collection('post').find().toArray();
+        // res.send(result[0].title)
+        //console.log(result[0])
+        res.render('list.ejs', {lists : result})
+    } catch(e) {
+        // 에러 로그파일 만드는거 연습해도 좋을듯
+        console.log(e);
+        res.send('error: ' + e);
+    }
+    
 })
 
 app.get('/write', async (req,res)=>{
@@ -63,11 +73,73 @@ app.post('/add', async (req,res)=>{
 
     // const result = await db.collection('post').find().toArray();
     // res.render('list.ejs', {lists : result})
-    await db.collection('post').insertOne({title : req.body.title, content: req.body.content})
+    if(req.body.title == '' || req.body.content == ''){
+        console.log('비어있습니다~');
+        return res.redirect('/write')
+    }
+
+    try {
+        await db.collection('post').insertOne({title : req.body.title, content: req.body.content})
+    } catch(e) {
+        // 에러 로그파일 만드는거 연습해도 좋을듯
+        console.log(e);
+        res.send('error: ' + e);
+    }
 
     return res.redirect('/list')
 })
 
+// 글 수정
+app.post('/edit/:id', async(req, res) => {
+
+    try{
+        const data = { title : req.body.title, content : req.body.content}
+        console.log(`edit:id : ${JSON.stringify(data)}`)
+        await db.collection('post').updateOne({_id : new ObjectId(req.params.id)},{$set : data})
+        
+        const result = await db.collection('post').find().toArray();
+        res.render('list.ejs', {lists : result})
+    } catch(e) {
+        // 에러 로그파일 만드는거 연습해도 좋을듯
+        console.log(e);
+        res.send('error: ' + e);
+    }
+})
+
+app.get('/detail/:id', async (req, res)=>{
+
+    try{
+
+        const result = await db.collection('post').findOne({_id : new ObjectId(req.params.id)})
+        console.log(`id : ${req.params.id}, result : ${JSON.stringify(result)}`)
+        
+        if(result == null){
+            res.status(400).send('해당 글이 존재하지 않습니다.')
+        }else{
+            return res.render('detail.ejs', {list : result});
+        }
+        
+    }catch(e){
+        // 에러 로그파일 만드는거 연습해도 좋을듯
+        console.log(e);
+        res.send('이상한거 넣지 마세요. error: ' + e);
+    }
+})
+
+
+app.get('/edit/:id', async(req, res)=>{
+    try {
+        const result = await db.collection('post').findOne({_id : new ObjectId(req.params.id)})
+        console.log(`id : ${req.params.id}, result : ${JSON.stringify(result)}`)
+        res.render('edit.ejs', {list : result})
+    }catch(e){
+        // 에러 로그파일 만드는거 연습해도 좋을듯
+        console.log(e);
+        res.send('error: ' + e);
+    }
+})
+
+// 연습용 API
 
 app.get('/time', async (req,res)=>{ 
     res.render('time.ejs', {time : new Date()})

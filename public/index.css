@@ -2,6 +2,10 @@ body {
     margin: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 .nav {
     display: flex;
     padding: 15px;
@@ -63,3 +67,9 @@ input,div {
     background : lightgrey;
     border-radius: 5px;
 }
+
+.detail-bg {
+    background: white;
+    padding: 15px;
+    margin-top: 10px;
+  }

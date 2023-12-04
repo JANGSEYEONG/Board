@@ -13,8 +13,14 @@
   <%- include('nav.ejs') %>
   <div class="white-bg">
     <% lists.map(list=>{ %>
-        <div class="list-box">
-          <h4><%= list.title %></h4>
+        <div class="list-box" onClick={console.log(33)}>
+          <h4>            
+            <a href="/detail/<%= list._id %>">
+              <%= list.title %>
+            </a>
+            <a href="/edit/<%= list._id %>">✏️</a>
+          </h4>
+          
           <p><%= list.content %></p>
         </div>
     <% }) %>

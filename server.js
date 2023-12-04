@@ -3,17 +3,20 @@ const path = require('path')
 
 const {MongoClient} = require('mongodb')
 const { ObjectId } = require('mongodb') 
+const methodOverride = require('method-override')
 
 const express = require('express')
 const app = express()
 
-const Keys = require('./keys.js')
-
-const url = Keys.DBURL;
+const {DBURL} = require('./keys.js')
+const {Log} = require('./log.js')
 
 let db;
 
-new MongoClient(url).connect().then((client)=>{
+// 로그 작성 관련 초기화
+Log.Init();
+
+new MongoClient(DBURL).connect().then((client)=>{
     console.log('DB연결성공')
     db = client.db('forum')
 
@@ -22,8 +25,8 @@ new MongoClient(url).connect().then((client)=>{
         console.log('http://localhost:8080 에서 서버 실행중')
     })
 
-}).catch((err)=>{
-    console.log(err)
+}).catch((e)=>{
+    Log.Write('DB CONNECTION',e,true)
 })
 
 // ejs 템플릿 엔진 세팅
@@ -37,6 +40,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
+// 메소드 강제 변경 라이브러리 추가
+app.use(methodOverride('_method')) 
+
 app.get('/', (req, res) => {
     // html 같은 파일 보내기
     // __dirname : 현재 server.js 파일의 절대경로
@@ -49,12 +55,9 @@ app.get('/list', async (req,res)=>{
 
     try {
         const result = await db.collection('post').find().toArray();
-        // res.send(result[0].title)
-        //console.log(result[0])
         res.render('list.ejs', {lists : result})
     } catch(e) {
-        // 에러 로그파일 만드는거 연습해도 좋을듯
-        console.log(e);
+        Log.Write('list[GET]',e, true);
         res.send('error: ' + e);
     }
     
@@ -69,10 +72,7 @@ app.get('/write', async (req,res)=>{
 app.post('/add', async (req,res)=>{
 
     console.log(req.body)
-    // db.collection('post').insertOne({title : '게시글3', content: '내용333'})
 
-    // const result = await db.collection('post').find().toArray();
-    // res.render('list.ejs', {lists : result})
     if(req.body.title == '' || req.body.content == ''){
         console.log('비어있습니다~');
         return res.redirect('/write')
@@ -81,8 +81,7 @@ app.post('/add', async (req,res)=>{
     try {
         await db.collection('post').insertOne({title : req.body.title, content: req.body.content})
     } catch(e) {
-        // 에러 로그파일 만드는거 연습해도 좋을듯
-        console.log(e);
+        Log.Write('add[POST]',e, true);
         res.send('error: ' + e);
     }
 
@@ -90,19 +89,18 @@ app.post('/add', async (req,res)=>{
 })
 
 // 글 수정
-app.post('/edit/:id', async(req, res) => {
+app.put('/edit/:id', async(req, res) => {
 
     try{
         const data = { title : req.body.title, content : req.body.content}
-        console.log(`edit:id : ${JSON.stringify(data)}`)
+        console.log(`edit-put:id : ${JSON.stringify(data)}`)
         await db.collection('post').updateOne({_id : new ObjectId(req.params.id)},{$set : data})
         
-        const result = await db.collection('post').find().toArray();
-        res.render('list.ejs', {lists : result})
+        return res.redirect('/list')
     } catch(e) {
-        // 에러 로그파일 만드는거 연습해도 좋을듯
-        console.log(e);
-        res.send('error: ' + e);
+        Log.Write('edit/:id[PUT]',e, true);
+
+        return res.send('error: ' + e);
     }
 })
 
@@ -120,8 +118,7 @@ app.get('/detail/:id', async (req, res)=>{
         }
         
     }catch(e){
-        // 에러 로그파일 만드는거 연습해도 좋을듯
-        console.log(e);
+        Log.Write('detail/:id[GET]',e, true);
         res.send('이상한거 넣지 마세요. error: ' + e);
     }
 })
@@ -133,8 +130,7 @@ app.get('/edit/:id', async(req, res)=>{
         console.log(`id : ${req.params.id}, result : ${JSON.stringify(result)}`)
         res.render('edit.ejs', {list : result})
     }catch(e){
-        // 에러 로그파일 만드는거 연습해도 좋을듯
-        console.log(e);
+        Log.Write('edit/:id[GET]',e, true);
         res.send('error: ' + e);
     }
 })

@@ -54,6 +54,7 @@ app.get('/', (req, res) => {
 app.get('/list', async (req,res)=>{
 
     try {
+        console.log(`list get 실행..`)
         const result = await db.collection('post').find().toArray();
         res.render('list.ejs', {lists : result})
     } catch(e) {
@@ -100,6 +101,23 @@ app.put('/edit/:id', async(req, res) => {
     } catch(e) {
         Log.Write('edit/:id[PUT]',e, true);
 
+        return res.send('error: ' + e);
+    }
+})
+
+// 글 삭제
+app.delete('/delete', async(req, res)=>{
+    console.log(req.query.id)
+    try{
+        const query = {_id : new ObjectId(req.query.id)};
+        const result = await db.collection('post').deleteOne(query);
+        console.log(`${result.deletedCount }`)
+
+        // ajax로 요청받은 경우 redirect, render 불가 -> 새로고침이잖슴..
+        //return res.redirect('/list')
+        res.send('삭제완료')
+    }catch(e){
+        Log.Write('delete[DELETE]',e, true);
         return res.send('error: ' + e);
     }
 })

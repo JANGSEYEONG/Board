@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/index.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
 
   <title>Document</title>
 </head>
@@ -13,18 +14,58 @@
   <%- include('nav.ejs') %>
   <div class="white-bg">
     <% lists.map(list=>{ %>
-        <div class="list-box" onClick={console.log(33)}>
+        <div class="list-box">
           <h4>            
             <a href="/detail/<%= list._id %>">
               <%= list.title %>
             </a>
             <a href="/edit/<%= list._id %>">✏️</a>
+            <span data-id = "<%= list._id %>" class="delete">🗑️</span>
           </h4>
           
           <p><%= list.content %></p>
         </div>
     <% }) %>
   </div> 
+<script>
+  const delBtns = document.querySelectorAll('.delete');
+  delBtns.forEach((btn)=>{
+    btn.addEventListener('click', function(event){
+      console.log(this.dataset.id)
 
+      // 새로고침 없이 몰래 http 요청 보낼 수 있음 -> AJAX
+      // fetch(`/delete?id=${this.dataset.id}`, {
+      //   method : 'DELETE',
+      //   headers : {'Content-Type' : 'application/json' }
+      //   //body: JSON.stringify({a:1})
+      // }).then((r)=>{
+      //   if(r.status == 200){
+      //     return r.text(); // object, array면 r.json()
+      //   }else{
+      //     console.log(`서버가 에러코드 리턴`)
+      //   }
+      // })
+      // .then((result)=>{
+      //   console.log(result)
+      // })
+      // .catch((e)=>{
+      //   // 인터넷 문제 등으로 실패
+      //   console.log(e)
+      // })
+
+      // fetch는 코드가 길어진다. axios같은 라이브러리 사용하면 편함
+      axios.delete(`/delete?id=${this.dataset.id}`)
+      .then((r)=>{
+        console.log(r.data);
+        //화살표함수여서 바깥의 this 유지 가능
+        this.parentElement.parentElement.style.display='none';
+      })
+      .catch((e)=>{
+        console.log(e)
+      })
+    })
+  })
+
+</script>
 </body>
 </html>

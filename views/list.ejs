@@ -31,7 +31,7 @@
   const delBtns = document.querySelectorAll('.delete');
   delBtns.forEach((btn)=>{
     btn.addEventListener('click', function(event){
-      console.log(this.dataset.id)
+      //console.log(this.dataset.id)
 
       // 새로고침 없이 몰래 http 요청 보낼 수 있음 -> AJAX
       // fetch(`/delete?id=${this.dataset.id}`, {

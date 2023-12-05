@@ -46,7 +46,8 @@ app.use(methodOverride('_method'))
 app.get('/', (req, res) => {
     // html 같은 파일 보내기
     // __dirname : 현재 server.js 파일의 절대경로
-    res.sendFile(__dirname + '/index.html')
+    //res.sendFile(__dirname + '/index.html')
+    res.redirect('/list')
 }) 
 
 

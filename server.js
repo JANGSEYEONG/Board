@@ -11,6 +11,10 @@ const app = express()
 const {DBURL} = require('./keys.js')
 const {Log} = require('./log.js')
 
+const session = require('express-session')
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+
 let db;
 
 // 로그 작성 관련 초기화
@@ -44,10 +48,55 @@ app.use(express.urlencoded({extended:true}))
 // 메소드 강제 변경 라이브러리 추가
 app.use(methodOverride('_method')) 
 
+// passport 라이브러리 세팅
+app.use(passport.initialize())
+app.use(session({
+    secret: '암호화에 쓸 비번',
+    resave : false,
+    saveUninitialized : false,
+    cookie : { maxAge : 60 * 60 * 1000 }
+}))
+
+app.use(passport.session()) 
+
+// passport 로그인 검증 로직
+// 이 코드 하단에 API들을 만들어야 그 API들은 로그인관련 기능들이 잘 작동
+//API 안에서 passport.authenticate('local') 이런 코드 작성하면 요 코드가 자동으로 실행
+passport.use(new LocalStrategy(async (userId, userPwd, cb) => {
+    // 검증 로직 짜면 된다
+    let result = await db.collection('user').findOne({ username : userId})
+    if (!result) {
+    return cb(null, false, { message: '아이디 DB에 없음' })
+    }
+    if (result.password == userPwd) {
+    return cb(null, result)
+    } else {
+    return cb(null, false, { message: '비번불일치' });
+    }
+}))
+
+// req.login() 함수 실행 시 자동으로 동작
+passport.serializeUser((user, done) => {
+    process.nextTick(() => {
+        done(null, { id: user._id, username: user.username })
+    })
+})
+
+// 쿠키 까서 확인, 세션 데이터 있는지 조회, 유저가 로그인 잘되어있는지 여부 판단
+passport.deserializeUser(async (user, done) => {
+    let result = await db.collection('user').findOne({_id : new ObjectId(user.id) })
+    delete result.password
+    process.nextTick(() => {
+        // 여기서 두번째 파라미터에 넣은 것이 자동으로 req.user 안에 들어감
+        return done(null, result)
+    })
+})
+
 app.get('/', (req, res) => {
     // html 같은 파일 보내기
     // __dirname : 현재 server.js 파일의 절대경로
     //res.sendFile(__dirname + '/index.html')
+    console.log(req.user)
     res.redirect('/list')
 }) 
 
@@ -186,6 +235,24 @@ app.get('/edit/:id', async(req, res)=>{
     }
 })
 
+// 로그인 페이지
+app.get('/login', (req, res)=>{
+    res.render('login.ejs')
+})
+
+app.post('/login', (req, res, next)=>{
+    //제출한아이디/비번이 DB에 있는거랑 일치하는지 확인하고 세션생성
+    passport.authenticate('local', (error, user, info) => {
+        if (error) return res.status(500).json(error)
+        if (!user) return res.status(401).json(info.message)
+        
+        // 검증 성공 시 세션 생성
+        req.logIn(user, (err) => {
+            if (err) return next(err)
+            res.redirect('/')
+        })
+    })(req, res, next)
+})
 // 연습용 API
 
 app.get('/time', async (req,res)=>{ 

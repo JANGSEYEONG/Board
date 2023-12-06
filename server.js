@@ -16,6 +16,7 @@ let db;
 // 로그 작성 관련 초기화
 Log.Init();
 
+// mongoDB auto increment 기능 추가해보기, 페이지들 한번 싹 정리하기
 new MongoClient(DBURL).connect().then((client)=>{
     console.log('DB연결성공')
     db = client.db('forum')
@@ -55,7 +56,7 @@ app.get('/', (req, res) => {
 app.get('/list', async (req,res)=>{
 
     try {
-        console.log(`list get 실행..`)
+        //console.log(`list get 실행..`)
         const result = await db.collection('post').find().toArray();
         res.render('list.ejs', {lists : result})
     } catch(e) {
@@ -63,6 +64,37 @@ app.get('/list', async (req,res)=>{
         res.send('error: ' + e);
     }
     
+})
+
+// 리스트 페이지별 조회
+app.get('/list/:page', async(req, res)=>{
+    
+    try{
+        const limitCount = 5;
+        const startOrder = (Number(req.params.page) - 1) * limitCount; // 비어있거나 할 때 예외처리 추가하면 좋을듯
+        
+        // skip 안에 100만 정도의 숫자가 들어가면 짱느려지는 단점이 있음
+        const result = await db.collection('post').find().skip(startOrder).limit(limitCount).toArray();
+        res.render('list.ejs', {lists : result})
+    }catch(e){
+        Log.Write('list/:page[GET]',e, true);
+        res.send('error: ' + e);
+    }
+})
+
+// 마지막 글에서 다음 ~개 가져오기
+app.get('/list/next/:id', async(req, res)=>{
+    try{
+        //console.log(req.params.id)
+        const query = {_id : {$gt : new ObjectId(req.params.id)}};
+        const result = await db.collection('post').find(query).limit(5).toArray();
+        //res.send(req.params.id);
+        
+        res.render('list.ejs', {lists : result})
+    }catch(e){
+        Log.Write('list[GET]',e, true);
+        res.send('error: ' + e);
+    }
 })
 
 app.get('/write', async (req,res)=>{
@@ -95,7 +127,7 @@ app.put('/edit/:id', async(req, res) => {
 
     try{
         const data = { title : req.body.title, content : req.body.content}
-        console.log(`edit-put:id : ${JSON.stringify(data)}`)
+        //console.log(`edit-put:id : ${JSON.stringify(data)}`)
         await db.collection('post').updateOne({_id : new ObjectId(req.params.id)},{$set : data})
         
         return res.redirect('/list')

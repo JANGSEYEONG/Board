@@ -26,7 +26,10 @@
           <p><%= list.content %></p>
         </div>
     <% }) %>
-  </div> 
+  </div>
+  <% if(lists.length > 0) { %>
+    <a href="/list/next/<%= lists[lists.length-1]._id %>">다음</a>
+  <% } %>
 <script>
   const delBtns = document.querySelectorAll('.delete');
   delBtns.forEach((btn)=>{

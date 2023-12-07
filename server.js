@@ -3,6 +3,8 @@ const path = require('path')
 
 const {MongoClient} = require('mongodb')
 const { ObjectId } = require('mongodb') 
+const MongoStore = require('connect-mongo')
+
 const methodOverride = require('method-override')
 
 const express = require('express')
@@ -14,6 +16,8 @@ const {Log} = require('./log.js')
 const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
+
+const bcrypt = require('bcrypt') 
 
 let db;
 
@@ -54,7 +58,11 @@ app.use(session({
     secret: '암호화에 쓸 비번',
     resave : false,
     saveUninitialized : false,
-    cookie : { maxAge : 60 * 60 * 1000 }
+    cookie : { maxAge : 60 * 60 * 1000 },
+    store: MongoStore.create({
+        mongoUrl : DBURL,
+        dbName: 'forum',
+    })
 }))
 
 app.use(passport.session()) 
@@ -68,7 +76,7 @@ passport.use(new LocalStrategy(async (userId, userPwd, cb) => {
     if (!result) {
     return cb(null, false, { message: '아이디 DB에 없음' })
     }
-    if (result.password == userPwd) {
+    if (await bcrypt.compare(userPwd, result.password)) {
     return cb(null, result)
     } else {
     return cb(null, false, { message: '비번불일치' });
@@ -96,7 +104,7 @@ app.get('/', (req, res) => {
     // html 같은 파일 보내기
     // __dirname : 현재 server.js 파일의 절대경로
     //res.sendFile(__dirname + '/index.html')
-    console.log(req.user)
+    //console.log(req.user)
     res.redirect('/login')
 }) 
 
@@ -147,7 +155,10 @@ app.get('/list/next/:id', async(req, res)=>{
 })
 
 app.get('/write', async (req,res)=>{
-
+    const User = req.user;
+    if(User === undefined || User === null || User === ''){
+        res.render('error.ejs');
+    }
     res.render('write.ejs')
 })
 
@@ -254,10 +265,52 @@ app.post('/login', (req, res, next)=>{
     })(req, res, next)
 })
 
+// 회원가입
+app.post('/register', async (req, res)=>{
+    console.log(req.body);
+    try{
+        const userId = req.body.username;
+        const pwd = req.body.password;
+    
+        // id 중복 체크
+        const isDuplicate = await db.collection('user').findOne({username : userId})
+
+        if(isDuplicate === undefined || isDuplicate === null){
+            const result = await db.collection('user').insertOne({
+                username : userId,
+                password : await bcrypt.hash(pwd, 10) // 암호화
+            });
+            res.redirect('/');
+        }else{
+            res.send('아이디중복');
+        }
+        
+    }catch(e){
+        Log.Write('register[post]',e, true);
+        res.send('error: ' + e);
+    }
+})
+
+// 마이페이지
+app.get('/myPage', (req, res)=>{
+    const User = req.user;
+    if(User === undefined || User === null || User === ''){
+        res.redirect('/login');
+    }
+    //console.log(req.user.username)
+    res.render('myPage.ejs', {userID : User.username});
+})
+
 // 에러페이지
 app.get('/error', (req, res)=>{
     res.render('error.ejs');
 });
+
+app.get('/logout', (req,res)=>{
+    // 쿠키 삭제
+    res.cookie('connect.sid','',{maxAge:0});
+    res.redirect('/');
+})
 
 // 연습용 API
 

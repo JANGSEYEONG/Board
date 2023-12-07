@@ -97,7 +97,7 @@ app.get('/', (req, res) => {
     // __dirname : 현재 server.js 파일의 절대경로
     //res.sendFile(__dirname + '/index.html')
     console.log(req.user)
-    res.redirect('/list')
+    res.redirect('/login')
 }) 
 
 
@@ -249,10 +249,16 @@ app.post('/login', (req, res, next)=>{
         // 검증 성공 시 세션 생성
         req.logIn(user, (err) => {
             if (err) return next(err)
-            res.redirect('/')
+            res.redirect('/list')
         })
     })(req, res, next)
 })
+
+// 에러페이지
+app.get('/error', (req, res)=>{
+    res.render('error.ejs');
+});
+
 // 연습용 API
 
 app.get('/time', async (req,res)=>{ 

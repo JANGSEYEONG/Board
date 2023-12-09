@@ -1,4 +1,6 @@
 
+require('dotenv').config() 
+
 const path = require('path')
 
 const {MongoClient} = require('mongodb')
@@ -10,7 +12,10 @@ const methodOverride = require('method-override')
 const express = require('express')
 const app = express()
 
-const {DBURL} = require('./keys.js')
+// const {DBURL} = require('./keys.js')
+const DBURL = process.env.DB_URL;
+const PORT = process.env.PORT;
+
 const {Log} = require('./log.js')
 
 const session = require('express-session')
@@ -30,7 +35,7 @@ new MongoClient(DBURL).connect().then((client)=>{
     db = client.db('forum')
 
     //db 연결 성공해야 서버 띄우기
-    app.listen(8080, () => {
+    app.listen(PORT, () => {
         console.log('http://localhost:8080 에서 서버 실행중')
     })
 
@@ -100,14 +105,89 @@ passport.deserializeUser(async (user, done) => {
     })
 })
 
+
+// 로그인 페이지
+app.get('/login', (req, res)=>{
+    res.render('login.ejs')
+})
+const checkIdPw = (req, res, next)=>{
+    if (req.body.username == '' || req.body.password == '') {
+        res.send('그러지마세요')
+    } else {
+        next()
+    }
+}
+app.post('/login', checkIdPw, (req, res, next)=>{
+    //제출한아이디/비번이 DB에 있는거랑 일치하는지 확인하고 세션생성
+    passport.authenticate('local', (error, user, info) => {
+        if (error) return res.status(500).json(error)
+        if (!user) return res.status(401).json(info.message)
+        
+        // 검증 성공 시 세션 생성
+        req.logIn(user, (err) => {
+            if (err) return next(err)
+            res.redirect('/list')
+        })
+    })(req, res, next)
+})
+
+// 회원가입
+app.post('/register', checkIdPw, async (req, res)=>{
+    console.log(req.body);
+    try{
+        const userId = req.body.username;
+        const pwd = req.body.password;
+    
+        // id 중복 체크
+        const isDuplicate = await db.collection('user').findOne({username : userId})
+
+        if(isDuplicate === undefined || isDuplicate === null){
+            const result = await db.collection('user').insertOne({
+                username : userId,
+                password : await bcrypt.hash(pwd, 10) // 암호화
+            });
+            res.redirect('/');
+        }else{
+            res.send('아이디중복');
+        }
+        
+    }catch(e){
+        Log.Write('register[post]',e, true);
+        res.send('error: ' + e);
+    }
+})
+
+const checkLogin = (req, res, next)=>{
+    const User = req.user;
+    if(User){
+        next();
+    }else{
+        console.log('로그인 안함')
+        //if(User === undefined || User === null || User === ''){
+        res.redirect('/login');
+        //}
+    }
+}
+
+
 app.get('/', (req, res) => {
     // html 같은 파일 보내기
     // __dirname : 현재 server.js 파일의 절대경로
     //res.sendFile(__dirname + '/index.html')
     //console.log(req.user)
-    res.redirect('/login')
+    res.redirect('/list')
 }) 
 
+app.use('/list', (res,req,next)=>{
+    console.log(1)
+    next()
+})
+
+
+app.use('/list', (res,req,next)=>{
+    console.log(2)
+    next()
+})
 
 // 리스트 조회
 app.get('/list', async (req,res)=>{
@@ -153,6 +233,20 @@ app.get('/list/next/:id', async(req, res)=>{
         res.send('error: ' + e);
     }
 })
+
+// 에러페이지
+app.get('/error', (req, res)=>{
+    res.render('error.ejs');
+});
+
+app.get('/logout', (req,res)=>{
+    // 쿠키 삭제
+    res.cookie('connect.sid','',{maxAge:0});
+    res.redirect('/');
+})
+
+// 이 아래 api부터는 로그인 체크 미들웨어 사용
+app.use(checkLogin)
 
 app.get('/write', async (req,res)=>{
     const User = req.user;
@@ -246,50 +340,6 @@ app.get('/edit/:id', async(req, res)=>{
     }
 })
 
-// 로그인 페이지
-app.get('/login', (req, res)=>{
-    res.render('login.ejs')
-})
-
-app.post('/login', (req, res, next)=>{
-    //제출한아이디/비번이 DB에 있는거랑 일치하는지 확인하고 세션생성
-    passport.authenticate('local', (error, user, info) => {
-        if (error) return res.status(500).json(error)
-        if (!user) return res.status(401).json(info.message)
-        
-        // 검증 성공 시 세션 생성
-        req.logIn(user, (err) => {
-            if (err) return next(err)
-            res.redirect('/list')
-        })
-    })(req, res, next)
-})
-
-// 회원가입
-app.post('/register', async (req, res)=>{
-    console.log(req.body);
-    try{
-        const userId = req.body.username;
-        const pwd = req.body.password;
-    
-        // id 중복 체크
-        const isDuplicate = await db.collection('user').findOne({username : userId})
-
-        if(isDuplicate === undefined || isDuplicate === null){
-            const result = await db.collection('user').insertOne({
-                username : userId,
-                password : await bcrypt.hash(pwd, 10) // 암호화
-            });
-            res.redirect('/');
-        }else{
-            res.send('아이디중복');
-        }
-        
-    }catch(e){
-        Log.Write('register[post]',e, true);
-        res.send('error: ' + e);
-    }
-})
 
 // 마이페이지
 app.get('/myPage', (req, res)=>{
@@ -301,16 +351,7 @@ app.get('/myPage', (req, res)=>{
     res.render('myPage.ejs', {userID : User.username});
 })
 
-// 에러페이지
-app.get('/error', (req, res)=>{
-    res.render('error.ejs');
-});
 
-app.get('/logout', (req,res)=>{
-    // 쿠키 삭제
-    res.cookie('connect.sid','',{maxAge:0});
-    res.redirect('/');
-})
 
 // 연습용 API
 

@@ -1,0 +1,6 @@
+Sun Dec 10 2023 11:16:54 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: register[post], Message: ReferenceError: db is not defined} 
+
+Sun Dec 10 2023 11:20:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: register[post], Message: TypeError: Cannot read properties of undefined (reading 'collection')} 
+

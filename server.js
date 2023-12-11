@@ -72,6 +72,29 @@ app.use(session({
 
 app.use(passport.session()) 
 
+// multer 라이브러리 사용
+const { S3Client } = require('@aws-sdk/client-s3')
+const multer = require('multer')
+const multerS3 = require('multer-s3')
+const s3 = new S3Client({
+    region : 'ap-northeast-2',
+    credentials : {
+        accessKeyId : process.env.S3_KEY,
+        secretAccessKey : process.env.S3_SECRET,
+    }
+})
+
+const upload = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'seyeong-test',
+        key: function (req, file, cb) {
+            //req안에는 사용자가 업로드할 때의 파일 명이 들어있음
+            cb(null, Date.now().toString()) //업로드시 파일명 변경가능
+        }
+    })
+})
+
 // passport 로그인 검증 로직
 // 이 코드 하단에 API들을 만들어야 그 API들은 로그인관련 기능들이 잘 작동
 //API 안에서 passport.authenticate('local') 이런 코드 작성하면 요 코드가 자동으로 실행
@@ -170,14 +193,6 @@ const checkLogin = (req, res, next)=>{
 }
 
 
-app.get('/', (req, res) => {
-    // html 같은 파일 보내기
-    // __dirname : 현재 server.js 파일의 절대경로
-    //res.sendFile(__dirname + '/index.html')
-    //console.log(req.user)
-    res.redirect('/list')
-}) 
-
 app.use('/list', (res,req,next)=>{
     console.log(1)
     next()
@@ -248,6 +263,16 @@ app.get('/logout', (req,res)=>{
 // 이 아래 api부터는 로그인 체크 미들웨어 사용
 app.use(checkLogin)
 
+
+app.get('/', (req, res) => {
+    // html 같은 파일 보내기
+    // __dirname : 현재 server.js 파일의 절대경로
+    //res.sendFile(__dirname + '/index.html')
+    //console.log(req.user)
+    res.redirect('/list')
+}) 
+
+
 app.get('/write', async (req,res)=>{
     const User = req.user;
     if(User === undefined || User === null || User === ''){
@@ -257,23 +282,41 @@ app.get('/write', async (req,res)=>{
 })
 
 // 글 등록
+// 글 저장 시 이미지 업로드 미들웨어 추가
+// upload.single('img') : name이 "img" 인 이미지 데이터가 들어오면 s3에 자동 업로드 해주게 추가
+// upload.array('img', 2) : 이미지가 여러개일 경우 사용, 두번쨰 파라미터는 최대 파일 개수
+// 근데 에러처리 하고싶으면 미들웨어로 쓰면 안댐.
 app.post('/add', async (req,res)=>{
 
-    console.log(req.body)
+    // 파일 업로드 에러처리하려면 이렇게 콜백함수 처리해야함
+    upload.single('img')(req,res, async (err)=>{
+        if(err) {
+            Log.Write('add[POST,file]',err, true);
+            return res.send('파일 업로드 에러')
+        }
 
-    if(req.body.title == '' || req.body.content == ''){
-        console.log('비어있습니다~');
-        return res.redirect('/write')
-    }
+        // 업도르 완료 시 업로드된 이미지의 url 생성 "req.file" or "req.files"
+        // file 객체 내의 location 항목이 업로드된 이미지의 url
+        //console.log(req.file)
 
-    try {
-        await db.collection('post').insertOne({title : req.body.title, content: req.body.content})
-    } catch(e) {
-        Log.Write('add[POST]',e, true);
-        res.send('error: ' + e);
-    }
+        if(req.body.title == '' || req.body.content == ''){
+            console.log('비어있습니다~');
+            return res.redirect('/write')
+        }
 
-    return res.redirect('/list')
+        try {
+            await db.collection('post').insertOne({
+                title : req.body.title,
+                content: req.body.content,
+                img : req?.file?.location //이미지 여러개면 array 자료형 쓰기
+            })
+        } catch(e) {
+            Log.Write('add[POST]',e, true);
+            res.send('error: ' + e);
+        }
+
+        return res.redirect('/list')        
+    })
 })
 
 // 글 수정

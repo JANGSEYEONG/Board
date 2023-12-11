@@ -11,11 +11,18 @@
 
     <%- include('nav.ejs') %>
 
-    <form action="/add" method="POST" class="form-box">
+    <form action="/add" method="POST" class="form-box" enctype="multipart/form-data"> <!--enctype 인코딩 타입 설정해야 파일이 서버로 잘넘어간다-->
         <h4>글쓰기</h4>
         <input type="text" name="title"> <!--데이터 전송 시 name 태그 속성 필수-->
         <input type="text" name="content">
+        <input type="file" name="img" accept="image/*"> <!--서버에서 확장자 검사는 추가해야함, multiple 속성 추가 시 파일 여러개 업로드 가능-->
         <button type="submit">전송</button>
     </form> 
 </body>
 </html>
+
+<!-- <이미지 업로드 기능 만들기>
+1. 글 작성페이지에 이미지 input 태그 추가
+2. 전송버튼 누르면 서버는 받은 이미지를 s3에 업로드 (multer 또는 formidable 라이브러리 사용)
+3. 이미지 url은 db에 글과 함께 저장
+4. 이미지가 필요할 경우 db에 있는 url을 꺼내서 html에 넣기 -->

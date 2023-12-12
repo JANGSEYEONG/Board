@@ -3,7 +3,7 @@ require('dotenv').config()
 
 const path = require('path')
 
-const {MongoClient} = require('mongodb')
+// const {MongoClient} = require('mongodb')
 const { ObjectId } = require('mongodb') 
 const MongoStore = require('connect-mongo')
 
@@ -24,13 +24,15 @@ const LocalStrategy = require('passport-local')
 
 const bcrypt = require('bcrypt') 
 
-let db;
+
 
 // 로그 작성 관련 초기화
 Log.Init();
 
 // mongoDB auto increment 기능 추가해보기, 페이지들 한번 싹 정리하기
-new MongoClient(DBURL).connect().then((client)=>{
+const connectDB = require('./database.js');
+let db;
+connectDB.then((client)=>{
     console.log('DB연결성공')
     db = client.db('forum')
 

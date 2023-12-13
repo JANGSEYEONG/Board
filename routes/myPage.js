@@ -14,10 +14,12 @@ connectDB.then((client)=>{
 // 마이페이지 조회
 router.get('/', (req, res)=>{
   const User = req.user;
-  if(User === undefined || User === null || User === ''){
-      res.redirect('/login');
-  }
-  //console.log(req.user.username)
+
+  // 미들웨어에서 처리함, 주석처리
+  // if(User === undefined || User === null || User === ''){
+  //     res.redirect('/auth/login');
+  // }
+  
   res.render('myPage.ejs', {userID : User.username});
 })
 

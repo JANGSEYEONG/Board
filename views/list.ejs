@@ -16,10 +16,10 @@
     <% lists.map(list=>{ %>
         <div class="list-box">
           <h4>            
-            <a href="/detail/<%= list._id %>">
+            <a href="/post/detail/<%= list._id %>">
               <%= list.title %>
             </a>
-            <a href="/edit/<%= list._id %>">✏️</a>
+            <a href="/post/edit/<%= list._id %>">✏️</a>
             <span data-id = "<%= list._id %>" class="delete">🗑️</span>
           </h4>
           
@@ -57,7 +57,7 @@
       // })
 
       // fetch는 코드가 길어진다. axios같은 라이브러리 사용하면 편함
-      axios.delete(`/delete?id=${this.dataset.id}`)
+      axios.delete(`/post/delete?id=${this.dataset.id}`)
       .then((r)=>{
         console.log(r.data);
         //화살표함수여서 바깥의 this 유지 가능

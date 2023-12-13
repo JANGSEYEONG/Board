@@ -1,0 +1,3 @@
+Wed Dec 13 2023 09:09:52 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: list/:page[GET], Message: MongoServerError: BSON field 'skip' value must be >= 0, actual value '-5'} 
+

@@ -13,7 +13,7 @@
 
     <!--안타깝게도 form태그는 override 안쓰면 get, post만 가능-->
     <!--라이브러리 설치해서 put으로 메소드 강제 전환-->
-    <form action="/edit/<%= list._id%>?_method=PUT" method="POST" class="form-box">
+    <form action="/post/edit/<%= list._id%>?_method=PUT" method="POST" class="form-box">
         <h4>글쓰기</h4>
         <input type="text" name="title" value="<%= list.title %>"> <!--데이터 전송 시 name 태그 속성 필수-->
         <input type="text" name="content" value="<%= list.content %>">

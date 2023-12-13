@@ -11,7 +11,7 @@
 
     <%- include('nav.ejs') %>
 
-    <form action="/add" method="POST" class="form-box" enctype="multipart/form-data"> <!--enctype 인코딩 타입 설정해야 파일이 서버로 잘넘어간다-->
+    <form action="/post/add" method="POST" class="form-box" enctype="multipart/form-data"> <!--enctype 인코딩 타입 설정해야 파일이 서버로 잘넘어간다-->
         <h4>글쓰기</h4>
         <input type="text" name="title"> <!--데이터 전송 시 name 태그 속성 필수-->
         <input type="text" name="content">

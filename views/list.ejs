@@ -12,6 +12,8 @@
 <body class="grey-bg">
 
   <%- include('nav.ejs') %>
+  <input id="inputKeyword" class="search">
+  <button id="btnSearch" class="search-send">검색</button> 
   <div class="white-bg">
     <% lists.map(list=>{ %>
         <div class="list-box">
@@ -67,6 +69,13 @@
         console.log(e)
       })
     })
+  })
+
+  document.querySelector('#btnSearch').addEventListener('click', ()=>{
+    let keyword = document.querySelector('#inputKeyword').value;
+
+    // href는 페이지 바꿔달라는 뜻 = GET 요청
+    location.href = `/list/search?val=${keyword}`;
   })
 
 </script>

@@ -60,10 +60,27 @@ router.get('/next/:id', async(req, res)=>{
 
       res.render('list.ejs', {lists : result})
   }catch(e){
-      Log.Write('list[GET]',e, true);
-      res.send('error: ' + e);
+    Log.Write('list[GET]',e, true);
+    res.send('error: ' + e);
   }
 })
 
+// // 검색
+// router.get('/search', async(req,res)=>{
+//   const keyword = req.query.val;
+
+//   try{
+//     const query = {title : keyword};
+//     console.log(keyword)
+//     const result = await db.collection('post').find(query).toArray();
+//     console.log(JSON.stringify(result))
+//     res.render('list.ejs', { lists : result });
+
+//   }catch(e){
+//     Log.Write('search[GET]',e, true);
+//     res.send('error: ' + e);
+//   }
+  
+// });
 
 module.exports = router;

@@ -72,4 +72,16 @@ input,div {
     background: white;
     padding: 15px;
     margin-top: 10px;
-  }
+}
+
+.search {
+    margin-left: 20px;
+    padding: 5px;
+}
+.search-send {
+    padding: 6px 10px;
+    background: lightgray;
+    border: none;
+    border-radius: 5px;
+    vertical-align: middle;
+} 

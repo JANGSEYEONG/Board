@@ -80,6 +80,12 @@ app.get('/error', (req, res)=>{
     res.render('error.ejs');
 });
 
+app.get('/search', async (req, res) => {
+    console.log(req.query.val)
+    let result = await db.collection('post').find( {title : req.query.val} ).toArray()
+    응답.render('search.ejs', { 글목록 : result })
+}) 
+
 // 이 아래 api부터는 로그인 체크 미들웨어 사용
 app.use(middle.checkLogin);
 

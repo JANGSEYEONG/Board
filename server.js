@@ -89,10 +89,6 @@ app.get('/search', async (req, res) => {
 // 이 아래 api부터는 로그인 체크 미들웨어 사용
 app.use(middle.checkLogin);
 
-app.get('/', (req, res) => {
-    res.redirect('/list')
-})
-
 // 게시물 관련 router
 app.use('/post', require('./routes/post.js') )
 

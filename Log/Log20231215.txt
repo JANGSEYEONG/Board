@@ -1,0 +1,15 @@
+Fri Dec 15 2023 00:02:40 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: list[GET], Message: BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer} 
+
+Fri Dec 15 2023 00:02:42 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: list[GET], Message: BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer} 
+
+Fri Dec 15 2023 00:02:44 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: list[GET], Message: BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer} 
+
+Fri Dec 15 2023 00:02:47 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: list[GET], Message: BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer} 
+
+Fri Dec 15 2023 00:14:05 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: search[GET], Message: MongoServerError: unknown operator: $text} 
+

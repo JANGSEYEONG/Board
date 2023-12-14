@@ -73,7 +73,7 @@
 
   document.querySelector('#btnSearch').addEventListener('click', ()=>{
     let keyword = document.querySelector('#inputKeyword').value;
-
+    
     // href는 페이지 바꿔달라는 뜻 = GET 요청
     location.href = `/list/search?val=${keyword}`;
   })

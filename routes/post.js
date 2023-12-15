@@ -54,10 +54,14 @@ router.post('/add', async (req,res)=>{
       }
 
       try {
+          const User = req.user;
+          console.log(User)
           await db.collection('post').insertOne({
               title : req.body.title,
               content: req.body.content,
-              img : req?.file?.location //이미지 여러개면 array 자료형 쓰기
+              img : req?.file?.location, //이미지 여러개면 array 자료형 쓰기
+              user : User.username,
+              userId : User._id
           })
       } catch(e) {
           Log.Write('add[POST]',e, true);

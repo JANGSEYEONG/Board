@@ -8,11 +8,17 @@
         <title>Document</title>
     </head>
     <body class="grey-bg">
-        <%- include('nav.ejs') %>
+        <%- include('nav.ejs', user) %>
 
         <div class="detail-bg">
+            <h6>작성자 : <%= list.writerNick %></h6>
+            <span><%= list.time %></span>
+            <% if(list.isEdit) { %>
+                <span>수정됨</span>
+            <% } %>   
             <h4><%= list.title %></h4>
             <p><%= list.content %></p>
+            <% console.log(list.content) %>
             <img src="<%= list.img %>" />
         </div>
     </body>

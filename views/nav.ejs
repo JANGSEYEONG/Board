@@ -1,6 +1,14 @@
 <div class="nav">
+
     <a href="/list" class="logo">Appleforum</a>
     <a href="/myPage">마이페이지</a>
     <a href="/post/write">글 작성</a>
     <a href="/auth/logout">로그아웃</a>
+
+    <% if(user) { %>
+        <p><%= user.usernick %> 님 안녕하세요!</p>
+    <% } else { %>
+        <p>비회원으로 이용중입니다.</p>
+    <% }%>
+
 </div>

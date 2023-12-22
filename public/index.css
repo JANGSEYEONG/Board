@@ -17,6 +17,10 @@ a {
     margin-right: 10px;
 }
 
+.nav p {
+    margin-left: 100px;
+}
+
 .logo {
     font-weight: bold;
 }

@@ -3,6 +3,7 @@ const connectDB = require('../client/DBClient.js');
 const { ObjectId } = require('mongodb');
 const { Log } = require('../log.js');
 const upload = require('../client/S3Client.js');
+const moment = require('moment');
 
 let db;
 
@@ -16,8 +17,7 @@ connectDB
 
 // 글 작성 페이지
 router.get('/write', async (req, res) => {
-    const User = req.user;
-    res.render('write.ejs');
+    res.render('write.ejs', {user : req.user});
 });
 
 // 글 수정 페이지
@@ -25,7 +25,7 @@ router.get('/edit/:id', async (req, res) => {
     try {
         const result = await db.collection('post').findOne({ _id: new ObjectId(req.params.id) });
         console.log(`id : ${req.params.id}, result : ${JSON.stringify(result)}`);
-        res.render('edit.ejs', { list: result });
+        res.render('edit.ejs', { list: result, user : req.user });
     } catch (e) {
         Log.Write('edit/:id[GET]', e, true);
         res.send('error: ' + e);
@@ -56,14 +56,20 @@ router.post('/add', async (req, res) => {
 
         try {
             const User = req.user;
-            console.log(User);
-            await db.collection('post').insertOne({
+            // console.log(User);
+            /**
+             * 작성자 id, 제목, 내용, attachFile, 작성 시간, 수정 여부
+             */
+            const insertData = {
+                writerId: User._id,
+                writerNick: User.usernick, //나중에 닉네임 바꾼건 반영 x, 수정하면 반영됨
                 title: req.body.title,
                 content: req.body.content,
                 img: req?.file?.location, //이미지 여러개면 array 자료형 쓰기
-                user: User.username,
-                userId: User._id,
-            });
+                time : moment().format("YYYY-MM-DD HH:mm:ss"),
+                isEdit: false // 수정 여부
+            }
+            await db.collection('post').insertOne(insertData);
         } catch (e) {
             Log.Write('add[POST]', e, true);
             res.send('error: ' + e);
@@ -76,9 +82,20 @@ router.post('/add', async (req, res) => {
 // 글 수정
 router.put('/edit/:id', async (req, res) => {
     try {
-        const data = { title: req.body.title, content: req.body.content };
+        const User = req.user;
+        if (req.body.title == '' || req.body.content == '') {
+            console.log('비어있습니다~');
+            return res.redirect('/post/write');
+        }
+        // 이미지 변경은 s3에서도 지워야하니까 나중에 추가하기
+        const editData = { 
+            writerNick: User.usernick,
+            title: req.body.title,
+            content: req.body.content,
+            time : moment().format("YYYY-MM-DD HH:mm:ss"),
+            isEdit : true };
         //console.log(`edit-put:id : ${JSON.stringify(data)}`)
-        await db.collection('post').updateOne({ _id: new ObjectId(req.params.id) }, { $set: data });
+        await db.collection('post').updateOne({ _id: new ObjectId(req.params.id) }, { $set: editData });
 
         return res.redirect('/list');
     } catch (e) {
@@ -114,7 +131,8 @@ router.get('/detail/:id', async (req, res) => {
         if (result == null) {
             res.status(400).send('해당 글이 존재하지 않습니다.');
         } else {
-            return res.render('detail.ejs', { list: result });
+
+            return res.render('detail.ejs', { list: result, user : req.user });
         }
     } catch (e) {
         Log.Write('detail/:id[GET]', e, true);

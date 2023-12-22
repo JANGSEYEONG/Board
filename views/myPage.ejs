@@ -7,15 +7,15 @@
         <title>Document</title>
     </head>
     <body class="grey-bg">
-        <%- include('nav.ejs') %>
+        <%- include('nav.ejs', user) %>
         <div class="white-bg">
             <div class="list-box">
-                <h4><%= User.usernick %>님의 마이페이지</h4>
+                <h4><%= user.usernick %>님의 마이페이지</h4>
             </div>
             <div class="list-box">
                 <h4>닉네임 변경하기</h4>
-                <h5>기존 닉네임 : <%= User.usernick %></h5>
-                <form action="/myPage/chgNick/<%= User._id%>?_method=PUT" method="POST">
+                <h5>기존 닉네임 : <%= user.usernick %></h5>
+                <form action="/myPage/chgNick/<%= user._id%>?_method=PUT" method="POST">
                     <input type="text" name="nickname" />
                     <button>저장하기</button>
                 </form>

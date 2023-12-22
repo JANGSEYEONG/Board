@@ -2,6 +2,7 @@ const router = require('express').Router();
 const connectDB = require('../client/DBClient.js');
 const { ObjectId } = require('mongodb');
 const { Log } = require('../log.js');
+const Util = require('../scripts/util.js');
 
 let db;
 
@@ -27,9 +28,9 @@ router.use('/', (req, res, next) => {
 // 리스트 전체 조회
 router.get('/', async (req, res) => {
     try {
-        //console.log(`list get 실행..`)
+        // const User = req.user;
         const result = await db.collection('post').find().toArray();
-        res.render('list.ejs', { lists: result });
+        res.render('list.ejs', { lists: result, user : req.user });
     } catch (e) {
         Log.Write('list[GET]', e, true);
         res.send('error: ' + e);
@@ -54,8 +55,7 @@ router.get('/search', async (req, res) => {
         // console.log(result1)
         // console.log(result2)
         const result = await db.collection('post').find(query1).toArray();
-
-        res.render('list.ejs', { lists: result });
+        res.render('list.ejs', { lists: result, user : req.user });
     } catch (e) {
         Log.Write('search[GET]', e, true);
         res.send('error: ' + e);
@@ -71,7 +71,7 @@ router.get('/:page', async (req, res) => {
 
         // skip 안에 100만 정도의 숫자가 들어가면 짱느려지는 단점이 있음
         const result = await db.collection('post').find().skip(startOrder).limit(limitCount).toArray();
-        res.render('list.ejs', { lists: result });
+        res.render('list.ejs', { lists: result, user : req.user });
     } catch (e) {
         Log.Write('list/:page[GET]', e, true);
         res.send('error: ' + e);
@@ -85,7 +85,7 @@ router.get('/next/:id', async (req, res) => {
         const query = { _id: { $gt: new ObjectId(req.params.id) } };
         const result = await db.collection('post').find(query).limit(5).toArray();
 
-        res.render('list.ejs', { lists: result });
+        res.render('list.ejs', { lists: result, user : req.user });
     } catch (e) {
         Log.Write('list[GET]', e, true);
         res.send('error: ' + e);

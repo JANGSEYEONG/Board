@@ -9,7 +9,7 @@
         <title>Document</title>
     </head>
     <body class="grey-bg">
-        <%- include('nav.ejs') %>
+        <%- include('nav.ejs', user) %>
         <input id="inputKeyword" class="search" />
         <button id="btnSearch" class="search-send">검색</button>
         <div class="white-bg">
@@ -17,10 +17,11 @@
             <div class="list-box">
                 <h4>
                     <a href="/post/detail/<%= list._id %>"> <%= list.title %> </a>
-                    <a href="/post/edit/<%= list._id %>">✏️</a>
-                    <span data-id="<%= list._id %>" class="delete">🗑️</span>
+                    <% if(list.writerId.toString() === user._id.toString()) { %>
+                        <a href="/post/edit/<%= list._id %>">✏️</a>
+                        <span data-id="<%= list._id %>" class="delete">🗑️</span>
+                    <% } %>
                 </h4>
-
                 <p><%= list.content %></p>
             </div>
             <% }) %>

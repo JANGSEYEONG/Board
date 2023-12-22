@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
     const User = req.user;
     // res.render('myPage.ejs', {userID : User.username});
     //console.log(User);
-    res.render('myPage.ejs', { User: User });
+    res.render('myPage.ejs', { user: User });
 });
 
 // 닉네임 변경하기

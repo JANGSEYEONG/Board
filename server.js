@@ -61,8 +61,8 @@ app.use(
         secret: '암호화에 쓸 비번',
         resave: false,
         saveUninitialized: false,
-        cookie: { maxAge: 60 * 60 * 1000 },
-        store: MongoStore.create({
+        cookie: { maxAge: 60 * 60 * 1000 }, //session document 유효기간 설정 (1시간)
+        store: MongoStore.create({ //DB 연결
             mongoUrl: DBURL,
             dbName: 'forum',
         }),

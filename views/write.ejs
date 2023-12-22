@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/index.css">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/index.css" />
 
-    <title>Document</title>
-</head>
-<body class="grey-bg">
+        <title>Document</title>
+    </head>
+    <body class="grey-bg">
+        <%- include('nav.ejs') %>
 
-    <%- include('nav.ejs') %>
-
-    <form action="/post/add" method="POST" class="form-box" enctype="multipart/form-data"> <!--enctype 인코딩 타입 설정해야 파일이 서버로 잘넘어간다-->
-        <h4>글쓰기</h4>
-        <input type="text" name="title"> <!--데이터 전송 시 name 태그 속성 필수-->
-        <input type="text" name="content">
-        <input type="file" name="img" accept="image/*"> <!--서버에서 확장자 검사는 추가해야함, multiple 속성 추가 시 파일 여러개 업로드 가능-->
-        <button type="submit">전송</button>
-    </form> 
-</body>
+        <form action="/post/add" method="POST" class="form-box" enctype="multipart/form-data">
+            <!--enctype 인코딩 타입 설정해야 파일이 서버로 잘넘어간다-->
+            <h4>글쓰기</h4>
+            <input type="text" name="title" />
+            <!--데이터 전송 시 name 태그 속성 필수-->
+            <input type="text" name="content" />
+            <input type="file" name="img" accept="image/*" />
+            <!--서버에서 확장자 검사는 추가해야함, multiple 속성 추가 시 파일 여러개 업로드 가능-->
+            <button type="submit">전송</button>
+        </form>
+    </body>
 </html>
 
 <!-- <이미지 업로드 기능 만들기>

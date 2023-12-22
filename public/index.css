@@ -10,7 +10,7 @@ a {
     display: flex;
     padding: 15px;
     align-items: center;
-    background : white;
+    background: white;
 }
 
 .nav a {
@@ -30,10 +30,10 @@ a {
     border-radius: 5px;
 }
 .list-box {
-    padding : 10px;
+    padding: 10px;
     border-bottom: 1px solid#eee;
 }
-.list-box h4{
+.list-box h4 {
     font-size: 16px;
     margin: 5px;
 }
@@ -43,18 +43,19 @@ a {
     color: grey;
 }
 
-input,div {
+input,
+div {
     box-sizing: border-box;
 }
 
 .form-box {
-    background : white;
-    padding : 25px;
+    background: white;
+    padding: 25px;
     margin: 20px;
     border-radius: 8px;
 }
 .form-box input {
-    padding : 10px;
+    padding: 10px;
     font-size: 16px;
     width: 100%;
     border: 1px solid black;
@@ -63,8 +64,8 @@ input,div {
 }
 .form-box button {
     padding: 10px;
-    border : none;
-    background : lightgrey;
+    border: none;
+    background: lightgrey;
     border-radius: 5px;
 }
 
@@ -84,4 +85,4 @@ input,div {
     border: none;
     border-radius: 5px;
     vertical-align: middle;
-} 
+}

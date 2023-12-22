@@ -1,83 +1,79 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/index.css">
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/index.css" />
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-  <title>Document</title>
-</head>
-<body class="grey-bg">
+        <title>Document</title>
+    </head>
+    <body class="grey-bg">
+        <%- include('nav.ejs') %>
+        <input id="inputKeyword" class="search" />
+        <button id="btnSearch" class="search-send">검색</button>
+        <div class="white-bg">
+            <% lists.map(list=>{ %>
+            <div class="list-box">
+                <h4>
+                    <a href="/post/detail/<%= list._id %>"> <%= list.title %> </a>
+                    <a href="/post/edit/<%= list._id %>">✏️</a>
+                    <span data-id="<%= list._id %>" class="delete">🗑️</span>
+                </h4>
 
-  <%- include('nav.ejs') %>
-  <input id="inputKeyword" class="search">
-  <button id="btnSearch" class="search-send">검색</button> 
-  <div class="white-bg">
-    <% lists.map(list=>{ %>
-        <div class="list-box">
-          <h4>            
-            <a href="/post/detail/<%= list._id %>">
-              <%= list.title %>
-            </a>
-            <a href="/post/edit/<%= list._id %>">✏️</a>
-            <span data-id = "<%= list._id %>" class="delete">🗑️</span>
-          </h4>
-          
-          <p><%= list.content %></p>
+                <p><%= list.content %></p>
+            </div>
+            <% }) %>
         </div>
-    <% }) %>
-  </div>
-  <% if(lists.length > 0) { %>
-    <a href="/list/next/<%= lists[lists.length-1]._id %>">다음</a>
-  <% } %>
-<script>
-  const delBtns = document.querySelectorAll('.delete');
-  delBtns.forEach((btn)=>{
-    btn.addEventListener('click', function(event){
-      //console.log(this.dataset.id)
+        <% if(lists.length > 0) { %>
+        <a href="/list/next/<%= lists[lists.length-1]._id %>">다음</a>
+        <% } %>
+        <script>
+            const delBtns = document.querySelectorAll('.delete');
+            delBtns.forEach((btn) => {
+                btn.addEventListener('click', function (event) {
+                    //console.log(this.dataset.id)
 
-      // 새로고침 없이 몰래 http 요청 보낼 수 있음 -> AJAX
-      // fetch(`/delete?id=${this.dataset.id}`, {
-      //   method : 'DELETE',
-      //   headers : {'Content-Type' : 'application/json' }
-      //   //body: JSON.stringify({a:1})
-      // }).then((r)=>{
-      //   if(r.status == 200){
-      //     return r.text(); // object, array면 r.json()
-      //   }else{
-      //     console.log(`서버가 에러코드 리턴`)
-      //   }
-      // })
-      // .then((result)=>{
-      //   console.log(result)
-      // })
-      // .catch((e)=>{
-      //   // 인터넷 문제 등으로 실패
-      //   console.log(e)
-      // })
+                    // 새로고침 없이 몰래 http 요청 보낼 수 있음 -> AJAX
+                    // fetch(`/delete?id=${this.dataset.id}`, {
+                    //   method : 'DELETE',
+                    //   headers : {'Content-Type' : 'application/json' }
+                    //   //body: JSON.stringify({a:1})
+                    // }).then((r)=>{
+                    //   if(r.status == 200){
+                    //     return r.text(); // object, array면 r.json()
+                    //   }else{
+                    //     console.log(`서버가 에러코드 리턴`)
+                    //   }
+                    // })
+                    // .then((result)=>{
+                    //   console.log(result)
+                    // })
+                    // .catch((e)=>{
+                    //   // 인터넷 문제 등으로 실패
+                    //   console.log(e)
+                    // })
 
-      // fetch는 코드가 길어진다. axios같은 라이브러리 사용하면 편함
-      axios.delete(`/post/delete?id=${this.dataset.id}`)
-      .then((r)=>{
-        console.log(r.data);
-        //화살표함수여서 바깥의 this 유지 가능
-        this.parentElement.parentElement.style.display='none';
-      })
-      .catch((e)=>{
-        console.log(e)
-      })
-    })
-  })
+                    // fetch는 코드가 길어진다. axios같은 라이브러리 사용하면 편함
+                    axios
+                        .delete(`/post/delete?id=${this.dataset.id}`)
+                        .then((r) => {
+                            console.log(r.data);
+                            //화살표함수여서 바깥의 this 유지 가능
+                            this.parentElement.parentElement.style.display = 'none';
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                        });
+                });
+            });
 
-  document.querySelector('#btnSearch').addEventListener('click', ()=>{
-    let keyword = document.querySelector('#inputKeyword').value;
-    
-    // href는 페이지 바꿔달라는 뜻 = GET 요청
-    location.href = `/list/search?val=${keyword}`;
-  })
+            document.querySelector('#btnSearch').addEventListener('click', () => {
+                let keyword = document.querySelector('#inputKeyword').value;
 
-</script>
-</body>
+                // href는 페이지 바꿔달라는 뜻 = GET 요청
+                location.href = `/list/search?val=${keyword}`;
+            });
+        </script>
+    </body>
 </html>

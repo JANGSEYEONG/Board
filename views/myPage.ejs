@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/index.css">
-    <title>Document</title>
-</head>
-<body class="grey-bg">
-    <%- include('nav.ejs') %>
-    <div class="white-bg">
-        <div class="list-box">
-            <h4><%= User.usernick %>님의 마이페이지</h4>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/index.css" />
+        <title>Document</title>
+    </head>
+    <body class="grey-bg">
+        <%- include('nav.ejs') %>
+        <div class="white-bg">
+            <div class="list-box">
+                <h4><%= User.usernick %>님의 마이페이지</h4>
+            </div>
+            <div class="list-box">
+                <h4>닉네임 변경하기</h4>
+                <h5>기존 닉네임 : <%= User.usernick %></h5>
+                <form action="/myPage/chgNick/<%= User._id%>?_method=PUT" method="POST">
+                    <input type="text" name="nickname" />
+                    <button>저장하기</button>
+                </form>
+            </div>
         </div>
-        <div class="list-box">
-            <h4>닉네임 변경하기</h4>
-            <h5>기존 닉네임 : <%= User.usernick %></h5>
-            <form action="/myPage/chgNick/<%= User._id%>?_method=PUT" method="POST">
-                <input type="text" name="nickname" />
-                <button>저장하기</button>
-            </form>
-        </div> 
-    </div>
-</body>
+    </body>
 </html>

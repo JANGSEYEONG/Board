@@ -10,10 +10,15 @@
     <%- include('nav.ejs') %>
     <div class="white-bg">
         <div class="list-box">
-            <h4><%= userID %>님의 마이페이지</h4>
-        </div> 
+            <h4><%= User.usernick %>님의 마이페이지</h4>
+        </div>
         <div class="list-box">
-            <h4>내가 쓴 글 목록</h4>
+            <h4>닉네임 변경하기</h4>
+            <h5>기존 닉네임 : <%= User.usernick %></h5>
+            <form action="/myPage/chgNick/<%= User._id%>?_method=PUT" method="POST">
+                <input type="text" name="nickname" />
+                <button>저장하기</button>
+            </form>
         </div> 
     </div>
 </body>

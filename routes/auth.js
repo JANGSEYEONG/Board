@@ -5,6 +5,7 @@ const { ObjectId } = require('mongodb');
 const {Log} = require('../log.js');
 const middle = require('../middle.js');
 const bcrypt = require('bcrypt') 
+const Util = require('../scripts/util.js');
 
 let db;
 
@@ -37,21 +38,29 @@ router.post('/login', middle.checkIdPwEmpty, (req, res, next)=>{
 // 회원가입 요청
 router.post('/register', middle.checkIdPwEmpty, async (req, res)=>{
   try{
-      const userId = req.body.username;
-      const pwd = req.body.password;
-  
-      // id 중복 체크
-      const isDuplicate = await db.collection('user').findOne({username : userId})
+    
+    const userId = req.body.username;
+    const userPassword = req.body.password;
+    const userNick = req.body.userNick;
 
-      if(isDuplicate === undefined || isDuplicate === null){
-          const result = await db.collection('user').insertOne({
-              username : userId,
-              password : await bcrypt.hash(pwd, 10) // 암호화
-          });
-          res.redirect('/');
-      }else{
-          res.send('아이디중복');
-      }
+    // 빈 값 체크
+    if(Util.IsNullOrWhiteSpace(userId)) return res.send('아이디 비어있음');
+    if(Util.IsNullOrWhiteSpace(userPassword)) return res.send('비번 비어있음');
+    if(Util.IsNullOrWhiteSpace(userNick)) return res.send('닉네임 비어있음');
+
+    // id 중복 체크
+    const isDuplicateId = await db.collection('user').findOne({username : userId})
+    const isDuplicateNick  = await db.collection('user').findOne({usernick : userNick})
+
+    if(isDuplicateId) return res.send('아이디 중복');
+    if(isDuplicateNick) return res.send('닉네임 중복');
+
+    const result = await db.collection('user').insertOne({
+        username : userId,
+        password : await bcrypt.hash(userPassword, 10), // 암호화
+        usernick : userNick
+    });
+    return res.redirect('/');
       
   }catch(e){
       Log.Write('register[post]',e, true);

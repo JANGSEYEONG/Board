@@ -69,6 +69,11 @@ app.use(session({
 
 app.use(passport.session());
 
+// 시작화면 설정
+app.get('/', middle.checkLogin, (req, res)=>{
+    res.redirect('/list');
+});
+
 // 인증 관련 router (로그인, 회원가입)
 app.use('/auth', require('./routes/auth.js'));
 

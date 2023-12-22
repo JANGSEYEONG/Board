@@ -1,0 +1,15 @@
+Fri Dec 22 2023 16:30:37 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chgNick/:id[PUT], Message: ReferenceError: Cannot access 'chgNick' before initialization} 
+
+Fri Dec 22 2023 16:31:24 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chgNick/:id[PUT], Message: ReferenceError: Cannot access 'chgNick' before initialization} 
+
+Fri Dec 22 2023 16:32:50 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chgNick/:id[PUT], Message: ReferenceError: Cannot access 'chgNick' before initialization} 
+
+Fri Dec 22 2023 16:34:31 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chgNick/:id[PUT], Message: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client} 
+
+Fri Dec 22 2023 16:35:05 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chgNick/:id[PUT], Message: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client} 
+

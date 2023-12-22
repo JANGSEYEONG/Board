@@ -16,7 +16,7 @@ connectDB.then((client)=>{
 
 // passport 로그인 검증 로직
 // 이 코드 하단에 API들을 만들어야 그 API들은 로그인관련 기능들이 잘 작동
-//API 안에서 passport.authenticate('local') 이런 코드 작성하면 요 코드가 자동으로 실행
+// API 안에서 passport.authenticate('local') 이런 코드 작성하면 요 코드가 자동으로 실행
 passport.use(new LocalStrategy(async (userId, userPwd, cb) => {
   // 검증 로직 작성
   let result = await db.collection('user').findOne({ username : userId})
@@ -33,7 +33,7 @@ passport.use(new LocalStrategy(async (userId, userPwd, cb) => {
 // req.login() 함수 실행 시 자동으로 동작
 passport.serializeUser((user, done) => {
   process.nextTick(() => {
-      done(null, { id: user._id, username: user.username })
+      done(null, { id: user._id, username: user.username, usernick : user.usernick })
   })
 })
 

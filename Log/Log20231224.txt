@@ -1,0 +1,3 @@
+Sun Dec 24 2023 14:21:48 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: delete[DELETE], Message: RangeError [ERR_HTTP_INVALID_STATUS_CODE]: Invalid status code: 0} 
+

@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/index.css" />
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
         <title>Document</title>
     </head>
@@ -11,15 +12,44 @@
         <%- include('nav.ejs', user) %>
 
         <div class="detail-bg">
+            <% if(list.writerId.toString() === user._id.toString()) { %>
+            <a href="/post/edit/<%= list._id %>">✏️</a>
+            <span data-id="<%= list._id %>" class="delete">🗑️</span>
+            <% } %>
             <h6>작성자 : <%= list.writerNick %></h6>
             <span><%= list.time %></span>
             <% if(list.isEdit) { %>
-                <span>수정됨</span>
-            <% } %>   
+            <span>수정됨</span>
+            <% } %>
             <h4><%= list.title %></h4>
             <p><%= list.content %></p>
             <% console.log(list.content) %>
             <img src="<%= list.img %>" />
         </div>
+
+        <script>
+            const delBtns = document.querySelectorAll('.delete');
+            delBtns.forEach((btn) => {
+                btn.addEventListener('click', function (event) {
+                    axios
+                        .delete(`/post/delete?id=${this.dataset.id}`)
+                        .then((r)=>{
+                            let msg;
+                            if(parseInt(r.data) < 1){
+                                msg = '삭제할 게시물이 없거나 작성자가 아닙니다.'
+                            }else{
+                                msg = '삭제 완료'
+                                //화살표함수여서 바깥의 this 유지 가능
+                                // this.parentElement.parentElement.style.display = 'none';
+                                location.href='/list';
+                            }
+                            alert(msg);
+                        })
+                        .catch((e)=>{
+                            console.log(e);
+                        });
+                });
+            });
+        </script>
     </body>
 </html>

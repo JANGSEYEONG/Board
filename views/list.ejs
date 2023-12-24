@@ -17,10 +17,11 @@
             <div class="list-box">
                 <h4>
                     <a href="/post/detail/<%= list._id %>"> <%= list.title %> </a>
-                    <% if(list.writerId.toString() === user._id.toString()) { %>
+                    <% if(list.writerId.toString() === user._id.toString()){ %>
                         <a href="/post/edit/<%= list._id %>">✏️</a>
                         <span data-id="<%= list._id %>" class="delete">🗑️</span>
                     <% } %>
+
                 </h4>
                 <p><%= list.content %></p>
             </div>
@@ -60,8 +61,16 @@
                         .delete(`/post/delete?id=${this.dataset.id}`)
                         .then((r) => {
                             console.log(r.data);
-                            //화살표함수여서 바깥의 this 유지 가능
-                            this.parentElement.parentElement.style.display = 'none';
+                            
+                            let msg;
+                            if(parseInt(r.data) < 1){
+                                msg = '삭제할 게시물이 없거나 작성자가 아닙니다.'
+                            }else{
+                                msg = '삭제 완료'
+                                //화살표함수여서 바깥의 this 유지 가능
+                                this.parentElement.parentElement.style.display = 'none';
+                            }
+                            alert(msg);
                         })
                         .catch((e) => {
                             console.log(e);

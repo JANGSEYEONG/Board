@@ -17,7 +17,7 @@
             <div class="list-box">
                 <h4>
                     <a href="/post/detail/<%= list._id %>"> <%= list.title %> </a>
-                    <% if(list.writerId.toString() === user._id.toString()){ %>
+                    <% if(user && (list.writerId.toString() === user._id.toString())){ %>
                         <a href="/post/edit/<%= list._id %>">✏️</a>
                         <span data-id="<%= list._id %>" class="delete">🗑️</span>
                     <% } %>

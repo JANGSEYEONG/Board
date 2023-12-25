@@ -23,10 +23,20 @@
             <% } %>
             <h4><%= list.title %></h4>
             <p><%= list.content %></p>
-            <% console.log(list.content) %>
             <img src="<%= list.img %>" />
+            <hr style="margin-top: 60px">
+            <div>
+            <p><strong>작성자</strong> 댓글내용</p>
+            </div>
+            <form action="/comment" method="POST">
+            <input name="content">
+            <input name="parentId" value="<%= list._id %>" style="display: none">
+            <button type="submit">댓글작성</button>
+            </form>
+            <% for (let i = 0; i < 2; i++) { %>
+                <p><strong>댓글작성자</strong>댓글내용</p>
+            <% } %> 
         </div>
-
         <script>
             const delBtns = document.querySelectorAll('.delete');
             delBtns.forEach((btn) => {

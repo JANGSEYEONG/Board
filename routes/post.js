@@ -134,14 +134,15 @@ router.delete('/delete', async (req, res) => {
 // 글 조회
 router.get('/detail/:id', async (req, res) => {
     try {
-        const result = await db.collection('post').findOne({ _id: new ObjectId(req.params.id) });
+        const postId = req.params.id;
+        const result = await db.collection('post').findOne({ _id: new ObjectId(postId) });
         // console.log(`id : ${req.params.id}, result : ${JSON.stringify(result)}`)
 
+        const result2 = await db.collection('comment').find({ parentPostId: new ObjectId(postId)}).toArray();
         if (result == null) {
             res.status(400).send('해당 글이 존재하지 않습니다.');
         } else {
-
-            return res.render('detail.ejs', { list: result, user : req.user });
+            return res.render('detail.ejs', { list: result, user : req.user, comments: result2 });
         }
     } catch (e) {
         Log.Write('detail/:id[GET]', e, true);

@@ -99,6 +99,9 @@ app.use(middle.checkLogin);
 // 게시물 관련 router
 app.use('/post', require('./routes/post.js'));
 
+// 댓글 관련 router
+app.use('/comment', require('./routes/comment.js'));
+
 // 마이페이지 관련 router
 app.use('/myPage', require('./routes/myPage.js'));
 

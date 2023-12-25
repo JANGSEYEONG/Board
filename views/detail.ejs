@@ -24,18 +24,17 @@
             <h4><%= list.title %></h4>
             <p><%= list.content %></p>
             <img src="<%= list.img %>" />
-            <hr style="margin-top: 60px">
+            <hr style="margin-top: 60px" />
             <div>
-            <p><strong>작성자</strong> 댓글내용</p>
+                <% for (let i = 0; i < comments.length; i++) { %>
+                <p><strong><%= comments[i].writer %></strong><%= comments[i].content %></p>
+                <% } %>
             </div>
-            <form action="/comment" method="POST">
-            <input name="content">
-            <input name="parentId" value="<%= list._id %>" style="display: none">
-            <button type="submit">댓글작성</button>
+            <form action="/comment/add" method="POST">
+                <input name="content" />
+                <input name="parentPostId" value="<%= list._id %>" style="display: none" />
+                <button type="submit">댓글작성</button>
             </form>
-            <% for (let i = 0; i < 2; i++) { %>
-                <p><strong>댓글작성자</strong>댓글내용</p>
-            <% } %> 
         </div>
         <script>
             const delBtns = document.querySelectorAll('.delete');
@@ -43,19 +42,19 @@
                 btn.addEventListener('click', function (event) {
                     axios
                         .delete(`/post/delete?id=${this.dataset.id}`)
-                        .then((r)=>{
+                        .then((r) => {
                             let msg;
-                            if(parseInt(r.data) < 1){
-                                msg = '삭제할 게시물이 없거나 작성자가 아닙니다.'
-                            }else{
-                                msg = '삭제 완료'
+                            if (parseInt(r.data) < 1) {
+                                msg = '삭제할 게시물이 없거나 작성자가 아닙니다.';
+                            } else {
+                                msg = '삭제 완료';
                                 //화살표함수여서 바깥의 this 유지 가능
                                 // this.parentElement.parentElement.style.display = 'none';
-                                location.href='/list';
+                                location.href = '/list';
                             }
                             alert(msg);
                         })
-                        .catch((e)=>{
+                        .catch((e) => {
                             console.log(e);
                         });
                 });

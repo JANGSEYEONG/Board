@@ -1,14 +1,35 @@
-<div class="nav">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a href="/list" class="navbar-brand">Appleforum</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul id="navBtns" class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+                <li class="nav-item">
+                    <a href="/myPage" class="nav-link devNavLink" aria-current="page">MyPage</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/post/write" class="nav-link devNavLink" aria-current="page">Write</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/auth/logout" class="nav-link devNavLink" aria-current="page">Logout</a>
+                </li>
+            </ul>
+            <span class="navbar-text" style="margin-right: 20px"> <% if(user) { %> <%= user.usernick %> 님 안녕하세요! <% } else { %> 비회원으로 이용중입니다. <% }%> </span>
 
-    <a href="/list" class="logo">Appleforum</a>
-    <a href="/myPage">마이페이지</a>
-    <a href="/post/write">글 작성</a>
-    <a href="/auth/logout">로그아웃</a>
+            <div class="d-flex" role="search">
+                <input id="inputKeyword" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                <button id="btnSearch" class="btn btn-outline-primary" type="submit">Search</button>
+            </div>
+        </div>
+    </div>
+</nav>
+<script>
+    document.querySelector('#btnSearch').addEventListener('click', () => {
+        let keyword = document.querySelector('#inputKeyword').value;
 
-    <% if(user) { %>
-        <p><%= user.usernick %> 님 안녕하세요!</p>
-    <% } else { %>
-        <p>비회원으로 이용중입니다.</p>
-    <% }%>
-
-</div>
+        // href는 페이지 바꿔달라는 뜻 = GET 요청
+        location.href = `/list/search?val=${keyword}`;
+    });
+</script>

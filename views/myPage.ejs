@@ -4,22 +4,32 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/index.css" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
         <title>Document</title>
     </head>
     <body class="grey-bg">
         <%- include('nav.ejs', user) %>
         <div class="white-bg">
+            <p class="fs-4 fw-semibold"><%= user.usernick %>님의 마이페이지</p>
             <div class="list-box">
-                <h4><%= user.usernick %>님의 마이페이지</h4>
-            </div>
-            <div class="list-box">
-                <h4>닉네임 변경하기</h4>
-                <h5>기존 닉네임 : <%= user.usernick %></h5>
+                <!-- <h4>닉네임 변경하기</h4>
+                <h5>기존 닉네임 : <%= user.usernick %></h5> -->
                 <form action="/myPage/chgNick/<%= user._id%>?_method=PUT" method="POST">
+                    <div class="mb-3">
+                        <label for="inputNickname" class="form-label fw-semibold">닉네임 변경하기</label>
+                        <input type="text" name="nickname" class="form-control" id="inputNickname" aria-describedby="emailHelp">
+                        <div id="changeNickname" class="form-text">기존 닉네임 : <%= user.usernick %></div>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">변경하기</button>
+                </form>
+                <!-- <form action="/myPage/chgNick/<%= user._id%>?_method=PUT" method="POST">
                     <input type="text" name="nickname" />
                     <button>저장하기</button>
-                </form>
+                </form> -->
             </div>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
     </body>
 </html>

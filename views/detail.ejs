@@ -12,22 +12,34 @@
         <%- include('nav.ejs', user) %>
 
         <div class="detail-bg">
+
+            <!--게시글 헤더 영역-->
             <% if(list.writerId.toString() === user._id.toString()) { %>
-            <a href="/post/edit/<%= list._id %>">✏️</a>
-            <span data-id="<%= list._id %>" class="delete">🗑️</span>
+                <a href="/post/edit/<%= list._id %>">✏️</a>
+                <span data-id="<%= list._id %>" class="delete">🗑️</span>
             <% } %>
+
             <h6>작성자 : <%= list.writerNick %></h6>
             <span><%= list.time %></span>
+
             <% if(list.isEdit) { %>
-            <span>수정됨</span>
+                <span>수정됨</span>
             <% } %>
+
+            <!--게시글 내용 영역-->
             <h4><%= list.title %></h4>
             <p><%= list.content %></p>
             <img src="<%= list.img %>" />
+
+            <!--댓글 영역-->
             <hr style="margin-top: 60px" />
             <div>
                 <% for (let i = 0; i < comments.length; i++) { %>
-                <p><strong><%= comments[i].writer %></strong><%= comments[i].content %></p>
+                    <% if(comments.writerId.toString() === user._id.toString()) { %>
+                        <a href="/comment/edit/<%= comments._id %>">✏️</a>
+                        <span data-id="<%= comments._id %>" class="delete">🗑️</span>
+                    <% } %>
+                    <p><strong><%= comments[i].writer %></strong><%= comments[i].content %></p>
                 <% } %>
             </div>
             <form action="/comment/add" method="POST">

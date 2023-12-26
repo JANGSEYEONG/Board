@@ -28,7 +28,7 @@ router.post('/add', async(req, res, next)=>{
         const data = {
             content : commentInfo.content,
             parentPostId : new ObjectId(commentInfo.parentPostId),
-            witerId : new ObjectId(User._id),
+            writerId : new ObjectId(User._id),
             writer : User.usernick // 로그인 계정의 닉네임으로..
         };
 

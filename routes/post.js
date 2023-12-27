@@ -109,22 +109,24 @@ router.delete('/delete', async (req, res) => {
     console.log(req.query.id);
     try {
 
+        const postId = req.query.id;
+        
         // 로그인한 userId와 작성자 Id가 같은지 서버에서 다시 체크하기
-        const query = { _id: new ObjectId(req.query.id), writerId: req.user._id };
+        const query = { _id: new ObjectId(postId), writerId: new ObjectId(req.user._id) };
         const result = await db.collection('post').deleteOne(query);
         console.log(`${result.deletedCount}`);
+
+        // 게시글을 부모로 가진 comment들도 삭제 필요
+        const query2 = { parentPostId : new ObjectId(postId) };
+        const result2 = await db.collection('comment').deleteMany(query2);
+        console.log(`${result2.deletedCount}`);
 
         // ajax로 요청받은 경우 redirect, render 불가 -> 새로고침이잖슴..
         // 이럴 때는 UI 를 프론트단에서 display:none 해주는 방식으로하거나 리액트같은거 쓰거나.,.
         //return res.redirect('/list')
 
-        res.send(result.deletedCount.toString());
-        // if(result.deletedCount < 1){
-        //     res.send('삭제할 게시물이 없거나 작성자가 아닙니다.');
-        // }else{
-        //     res.send('삭제완료');
-        // }
-        
+        return res.send(result.deletedCount.toString());
+
     } catch (e) {
         Log.Write('delete[DELETE]', e, true);
         return res.send('error: ' + e);

@@ -17,7 +17,7 @@
             <!--게시글 헤더 영역-->
             <% if(list.writerId.toString() === user._id.toString()) { %>
                 <a href="/post/edit/<%= list._id %>">✏️</a>
-                <span data-id="<%= list._id %>" class="delete">🗑️</span>
+                <span data-id="<%= list._id %>" class="delete devDelPost">🗑️</span>
             <% } %>
 
             <h6>작성자 : <%= list.writerNick %></h6>
@@ -37,11 +37,16 @@
             <div>
                 <% for (let i = 0; i < comments.length; i++) { %>
                     <div> 
+                        <span>
+                            <strong>[<%= comments[i].writer %>] </strong>
+                            <%= comments[i].content %>
+                            <input style="display: none;" type="text" value="<%= comments[i].content %>"/>
+                        </span>
                         <% if(comments[i].writerId.toString() === user._id.toString()) { %>
-                            <a href="/comment/edit/<%= comments[i]._id %>">✏️</a>
-                            <span data-id="<%= comments[i]._id %>" class="delete">🗑️</span>
+                            <span class="devEditComment">✏️</span>
+                            <span class="devPutComment">✔️</span>                           
+                            <span data-id="<%= comments[i]._id %>" class="delete devDelComment">🗑️</span>
                         <% } %>
-                        <p><strong><%= comments[i].writer %></strong><%= comments[i].content %></p>
                     </div>
                 <% } %>
             </div>
@@ -51,10 +56,12 @@
                 <button type="submit">댓글작성</button>
             </form>
         </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <script>
-            const delBtns = document.querySelectorAll('.delete');
-            delBtns.forEach((btn) => {
+            // 게시글 삭제
+            const delPostBtns = document.querySelectorAll('.devDelPost');
+            delPostBtns.forEach((btn) => {
                 btn.addEventListener('click', function (event) {
                     axios
                         .delete(`/post/delete?id=${this.dataset.id}`)
@@ -75,6 +82,34 @@
                         });
                 });
             });
+
+            // 댓글 삭제
+            const delCommentBtns = document.querySelectorAll('.devDelComment');
+            delCommentBtns.forEach((btn) => {
+                btn.addEventListener('click', function (event) {
+                    axios
+                        .delete(`/comment/delete?id=${this.dataset.id}`)
+                        .then((r) => {
+                            let msg;
+                            if (parseInt(r.data) < 1) {
+                                msg = '삭제할 게시물이 없거나 작성자가 아닙니다.';
+                            } else {
+                                msg = '삭제 완료';
+                                //화살표함수여서 바깥의 this 유지 가능
+                                this.parentElement.style.display = 'none';
+                                //location.href = '/list';
+                            }
+                            alert(msg);
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                        });
+                });
+            });
+        
+            // 댓글 수정
+            const editCommentBtns = document.querySelectorAll('.devEditComment');
+            
         </script>
     </body>
 </html>

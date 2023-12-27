@@ -49,7 +49,21 @@ router.put('/edit/:id', async(req, res, next)=>{
 
 // 댓글 삭제
 router.delete('/delete', async(req, res, next)=>{
+    try{
 
+        const commentId = req.query.id;
+
+        const query = { _id: new ObjectId(commentId), writerId: new ObjectId(req.user._id) };
+        const result = await db.collection('comment').deleteOne(query);
+
+        console.log(`${result.deletedCount}`);
+
+        return res.send(result.deletedCount.toString());
+
+    }catch(e){
+        Log.Write('comment/delete[delete]', e, true);
+        res.send('error: ' + e);
+    }
 });
 
 module.exports = router;

@@ -43,8 +43,29 @@ router.post('/add', async(req, res, next)=>{
 });
 
 // 댓글 수정
-router.put('/edit/:id', async(req, res, next)=>{
+router.put('/edit', async(req, res, next)=>{
+    try{
+        console.log(req.body)
 
+        const commentId = req.body.id;
+        const content = req.body.content;
+        const User = req.user;
+
+        if(Util.IsNullOrWhiteSpace(content)) return res.send("-1");
+        
+        // console.log(commentId);
+        // console.log(User._id);
+
+        const condition = { _id: new ObjectId(commentId), writerId: new ObjectId(User._id)};
+        const result = await db.collection('comment').updateOne(condition, { $set: { content : content } });
+
+        console.log(result);
+        res.send(result.matchedCount.toString());
+
+    }catch(e){
+        Log.Write('comment/edit[put]', e, true);
+        res.send('error: ' + e);
+    }
 });
 
 // 댓글 삭제

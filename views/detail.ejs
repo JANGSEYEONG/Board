@@ -1,63 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="/index.css" />
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-        <title>Document</title>
-    </head>
-    <body class="grey-bg">
-        <%- include('nav.ejs', user) %>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/index.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <title>Document</title>
+</head>
+
+<body class="grey-bg">
+    <%- include('nav.ejs', user) %>
 
         <div class="detail-bg">
 
             <!--게시글 헤더 영역-->
-            <% if(list.writerId.toString() === user._id.toString()) { %>
+            <% if(list.writerId.toString()===user._id.toString()) { %>
                 <a href="/post/edit/<%= list._id %>">✏️</a>
                 <span data-id="<%= list._id %>" class="delete devDelPost">🗑️</span>
-            <% } %>
-
-            <h6>작성자 : <%= list.writerNick %></h6>
-            <span><%= list.time %></span>
-
-            <% if(list.isEdit) { %>
-                <span>수정됨</span>
-            <% } %>
-
-            <!--게시글 내용 영역-->
-            <h4><%= list.title %></h4>
-            <p><%= list.content %></p>
-            <img src="<%= list.img %>" />
-
-            <!--댓글 영역-->
-            <hr style="margin-top: 60px" />
-            <div>
-                <% for (let i = 0; i < comments.length; i++) { %>
-                    <div> 
-                        <span>
-                            <strong>[<%= comments[i].writer %>] </strong>
-                            <%= comments[i].content %>
-                            <input style="display: none;" type="text" value="<%= comments[i].content %>"/>
-                        </span>
-                        <% if(comments[i].writerId.toString() === user._id.toString()) { %>
-                            <span class="devEditComment">✏️</span>
-                            <span class="devPutComment">✔️</span>                           
-                            <span data-id="<%= comments[i]._id %>" class="delete devDelComment">🗑️</span>
-                        <% } %>
-                    </div>
                 <% } %>
-            </div>
-            <form action="/comment/add" method="POST">
-                <input name="content" />
-                <input name="parentPostId" value="<%= list._id %>" style="display: none" />
-                <button type="submit">댓글작성</button>
-            </form>
+
+                    <h6>작성자 : <%= list.writerNick %>
+                    </h6>
+                    <span>
+                        <%= list.time %>
+                    </span>
+
+                    <% if(list.isEdit) { %>
+                        <span>수정됨</span>
+                        <% } %>
+
+                            <!--게시글 내용 영역-->
+                            <h4>
+                                <%= list.title %>
+                            </h4>
+                            <p>
+                                <%= list.content %>
+                            </p>
+                            <img src="<%= list.img %>" />
+
+                            <!--댓글 영역-->
+                            <hr style="margin-top: 60px" />
+                            <div>
+                                <% for (let i=0; i < comments.length; i++) { %>
+                                    <div>
+                                        <span>
+                                            <strong>[<%= comments[i].writer %>] </strong>
+                                            <span class="devCommentContent">
+                                                <%= comments[i].content %>
+                                            </span>
+                                            <input class="devEditInput" style="display: none;" type="text"
+                                                value="<%= comments[i].content %>" />
+                                        </span>
+                                        <% if(comments[i].writerId.toString()===user._id.toString()) { %>
+                                            <span data-id="<%= comments[i]._id %>" class="devEditComment">✏️</span> <!--✔️-->
+                                            <span class="devEditCancelComment" style="display: none;">❌</span>
+                                            <span data-id="<%= comments[i]._id %>"
+                                                class="delete devDelComment">🗑️</span>
+                                            <% } %>
+                                    </div>
+                                    <% } %>
+                            </div>
+                            <hr />
+                            <form action="/comment/add" method="POST">
+                                <input name="content" />
+                                <input name="parentPostId" value="<%= list._id %>" style="display: none" />
+                                <button type="submit">댓글작성</button>
+                            </form>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
         <script>
             // 게시글 삭제
             const delPostBtns = document.querySelectorAll('.devDelPost');
@@ -106,10 +123,108 @@
                         });
                 });
             });
-        
+
             // 댓글 수정
             const editCommentBtns = document.querySelectorAll('.devEditComment');
-            
+            editCommentBtns.forEach((btn) => {
+                btn.addEventListener('click', function (event) {
+
+                    // 1. 현재 상태 저장 (input의 show 유무에 따라 설정)
+                    const editInput = this.parentElement.querySelector('.devEditInput');
+                    let isEditing = !(editInput.style.display === "none");
+
+                    // 2. 상태에 따라 동작 분기
+                    if (isEditing) {
+                        // 체크 표시 클릭 시
+
+                        // 1. 수정 요청 보내기
+                        // 1-1) 새로운 댓글 value 저장
+                        let data = editInput.value;
+                        let commentId = this.dataset.id;
+
+                        if (data == "" || data == undefined || data == null) {
+                            alert("내용이 비어있습니다.");
+                            return;
+                        }
+                        // 1-2) axios로 서버에 전송
+                        let sendData = {
+                            id : commentId,
+                            content : data
+                        }
+                        axios
+                            .put("/comment/edit", sendData)
+                            .then((r) => {
+                                let msg;
+                                console.log(r.data);
+
+                                // 1-3) 서버 처리 결과에 따라 처리
+                                if(parseInt(r.data) > 0) {
+                                    // 성공 시, 아이콘 및 상태 변경
+                                    msg = "수정 완료";
+
+                                    this.parentElement.querySelector(".devCommentContent").innerHTML = data;
+                                    this.parentElement.querySelector(".devEditInput").value = data;
+
+                                    chgEditStatucComment(this, false);
+                                } else if(parseInt(r.data) < 0) {
+                                    // 댓글 비어있음 표시
+                                    msg = "내용이 비어있습니다.";
+                                    
+                                } else {
+                                    // 실패 시, 유지
+                                    msg = "수정할 댓글이 없거나 작성자가 아닙니다.";
+                                }
+                                
+                                // 결과 메세지 띄우기
+                                alert(msg);
+                            })
+                            .catch((e) => {
+                                console.log(e);
+                            });
+                    } else {
+                        // 연필 표시 클릭 시
+
+                        // 1. 아이콘 및 상태 변경
+                        chgEditStatucComment(this, true);
+                    }
+                });
+            });
+
+            const editCancelBtns = document.querySelectorAll('.devEditCancelComment');
+            editCancelBtns.forEach((btn) => {
+                btn.addEventListener('click', function (event) {
+                    chgEditStatucComment(this, false);
+                });
+            });
+
+            const chgEditStatucComment = (target, goEdit) => {
+                if (goEdit) {
+                    // 1. input창 show
+                    target.parentElement.querySelector('.devEditInput').style.display = "inline";
+
+                    // 2. 체크표시로 text 변경
+                    target.parentElement.querySelector('.devEditComment').innerHTML = '✔️';
+
+                    // 3. 수정 취소 버튼 show
+                    target.parentElement.querySelector('.devEditCancelComment').style.display = "inline";
+
+                    // 4. 기존 댓글 태그 hide
+                    target.parentElement.querySelector('.devCommentContent').style.display = "none";
+                } else {
+                    // 1. input창 hide
+                    target.parentElement.querySelector('.devEditInput').style.display = "none";
+
+                    // 2. 연필 표시로 text 변경
+                    target.parentElement.querySelector('.devEditComment').innerHTML = '✏️';
+
+                    // 3. 수정 취소 버튼 hide
+                    target.parentElement.querySelector('.devEditCancelComment').style.display = "none";
+
+                    // 4. 기존 댓글 태그 show
+                    target.parentElement.querySelector('.devCommentContent').style.display = "inline";
+                }
+            }
         </script>
-    </body>
+</body>
+
 </html>

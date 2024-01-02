@@ -46,6 +46,16 @@ a {
     margin: 5px;
     color: grey;
 }
+/* 
+.list-box .left-box {
+    width:80%;
+    float: left;
+}
+
+.list-box .right-box {
+    width:20%;
+    float: left;
+} */
 
 input,
 div {

@@ -105,6 +105,9 @@ app.use('/comment', require('./routes/comment.js'));
 // 마이페이지 관련 router
 app.use('/myPage', require('./routes/myPage.js'));
 
+// 마이페이지 관련 router
+app.use('/chat', require('./routes/chat.js'));
+
 // 연습용 API 들
 // app.get('/time', async (req,res)=>{
 //     res.render('time.ejs', {time : new Date()})

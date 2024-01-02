@@ -14,15 +14,24 @@
         <div class="white-bg">
             <% lists.map(list=>{ %>
             <div class="list-box">
+                
+                <div style="margin-bottom: 15px;">
+                    <span><%= list.writerNick %></span>
+                    <% if(user && (list.writerId.toString() !== user._id.toString())){ %>
+                        <button>채팅하기</button>
+                    <% } %>
+                </div>
+                
                 <h4>
                     <a href="/post/detail/<%= list._id %>"> <%= list.title %> </a>
                     <% if(user && (list.writerId.toString() === user._id.toString())){ %>
                         <a href="/post/edit/<%= list._id %>">✏️</a>
                         <span data-id="<%= list._id %>" class="delete">🗑️</span>
                     <% } %>
-
+                    
                 </h4>
                 <p><%= list.content %></p>
+                
             </div>
             <% }) %>
         </div>

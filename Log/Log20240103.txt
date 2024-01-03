@@ -1,0 +1,24 @@
+Wed Jan 03 2024 23:14:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: DB CONNECTION, Message: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.fmsqpoc.mongodb.net} 
+
+Wed Jan 03 2024 23:14:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: DB CONNECTION, Message: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.fmsqpoc.mongodb.net} 
+
+Wed Jan 03 2024 23:14:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: DB CONNECTION, Message: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.fmsqpoc.mongodb.net} 
+
+Wed Jan 03 2024 23:14:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: DB CONNECTION, Message: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.fmsqpoc.mongodb.net} 
+
+Wed Jan 03 2024 23:14:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: DB CONNECTION, Message: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.fmsqpoc.mongodb.net} 
+
+Wed Jan 03 2024 23:14:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: DB CONNECTION, Message: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.fmsqpoc.mongodb.net} 
+
+Wed Jan 03 2024 23:14:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: DB CONNECTION, Message: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.fmsqpoc.mongodb.net} 
+
+Wed Jan 03 2024 23:14:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: DB CONNECTION, Message: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.fmsqpoc.mongodb.net} 
+

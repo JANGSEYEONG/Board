@@ -18,8 +18,9 @@
     <body class="grey-bg">
         <%- include('nav.ejs', user) %>
 
+        <%= JSON.stringify(result) %>
+
         <div class="detail-bg">
-            <p class="text-center fw-semibold"><%= partner.nickname %>님과의 채팅</p>
 
             <div class="chat-screen">
                 <div class="chat-box"><span>안녕하세요</span></div>

@@ -18,18 +18,26 @@
     <body class="grey-bg">
         <%- include('nav.ejs', user) %>
 
-
         <div class="white-bg">
+            <% for (let i = 0; i < chatList.length; i++){ %>
             <div class="list-box">
+                <h4>
+                    <a href="/chat/detail/<%= chatList[i]._id %>">채팅방제목 <%= i %></a>
+                </h4>
+                <p>채팅방설명~~</p>
+            </div>
+            <% } %>
+
+            <!-- <div class="list-box">
                 <div class="left-box">
-                    <div style="margin-bottom: 15px;">
+                    <div style="margin-bottom: 15px">
                         <span>상대 닉네임</span>
                     </div>
                 </div>
                 <div class="right-box">
                     <button type="button" class="btn btn-outline-primary btn-sm">채팅하기</button>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <script

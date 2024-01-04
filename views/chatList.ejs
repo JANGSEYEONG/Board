@@ -19,14 +19,15 @@
         <%- include('nav.ejs', user) %>
 
         <div class="white-bg">
-            <% for (let i = 0; i < chatList.length; i++){ %>
-            <div class="list-box">
-                <h4>
-                    <a href="/chat/detail/<%= chatList[i]._id %>">채팅방제목 <%= i %></a>
-                </h4>
-                <p>채팅방설명~~</p>
-            </div>
-            <% } %>
+
+            <% chatList.forEach((x)=>{ %>
+                <div class="list-box">
+                    <h4>
+                        <a href="/chat/detail/<%= x._id %>"><span class="badge bg-secondary "><%= x.partnerNick %> 님과의 채팅방</span></a>
+                    </h4>
+                    <p>생성 일시 : <%= x.date %></p>
+                </div>
+            <% }) %>
 
         </div>
 

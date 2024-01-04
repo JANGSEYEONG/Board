@@ -77,7 +77,7 @@ passport.deserializeUser(async (user, done) => {
     // 쿠키와 세션 데이터를 비교해보고 별 이상이 없으면 현재 로그인된 유저 정보를 알려준다
     // user를 그대로 보내기에는 세션 데이터가 오래되었을 수 있으니, db에서 조회해서 보낸다
     let result = await db.collection('user').findOne({ _id: new ObjectId(user.id) });
-    delete result.password;
+    if(result && result.password) delete result.password;
     process.nextTick(() => {
         // 여기서 두번째 파라미터에 넣은 것이 자동으로 req.user 안에 들어감
         return done(null, result);

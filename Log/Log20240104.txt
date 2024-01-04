@@ -1,0 +1,36 @@
+Thu Jan 04 2024 23:04:24 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: TypeError: Cannot read properties of undefined (reading 'find')} 
+
+Thu Jan 04 2024 23:10:12 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: ReferenceError: partnersId is not defined} 
+
+Thu Jan 04 2024 23:25:40 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: MongoServerError: Error getting filter : Expected 'filter' to be BSON (or equivalent), but got <nil> instead. Doc = [{find user} {filter <nil>} {lsid [{id {4 [222 81 98 248 145 167 74 225 182 208 215 231 188 138 164 227]}}]} {$clusterTime [{clusterTime {1704378341 2}} {signature [{hash {0 [232 219 158 10 150 231 39 226 161 240 141 190 27 29 21 48 248 19 131 245]}} {keyId 7278344759117086721}]}]} {$db forum}]} 
+
+Thu Jan 04 2024 23:27:47 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: TypeError: db.collection(...).find(...).select is not a function} 
+
+Thu Jan 04 2024 23:29:45 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: TypeError: db.collection(...).find(...).pretty is not a function} 
+
+Thu Jan 04 2024 23:31:39 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: TypeError: db.collection(...).find(...).pretty is not a function} 
+
+Thu Jan 04 2024 23:36:32 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: TypeError: db.collection(...).find(...).toArray(...).map is not a function} 
+
+Thu Jan 04 2024 23:36:34 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: TypeError: db.collection(...).find(...).toArray(...).map is not a function} 
+
+Thu Jan 04 2024 23:37:06 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: TypeError: db.collection(...).find(...).toArray(...).map is not a function} 
+
+Thu Jan 04 2024 23:37:08 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: TypeError: db.collection(...).find(...).toArray(...).map is not a function} 
+
+Thu Jan 04 2024 23:37:32 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: TypeError: db.collection(...).find(...).toArray(...).map is not a function} 
+
+Thu Jan 04 2024 23:37:34 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/list[GET], Message: TypeError: db.collection(...).find(...).toArray(...).map is not a function} 
+

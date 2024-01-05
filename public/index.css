@@ -115,6 +115,14 @@ div {
 .mine {
     justify-content: end;
 }
+
+.chat-box span.chat-time {
+    background: #ffffff;
+    font-size: 13px;
+    margin: 5px;
+    color: grey;
+}
+
 .chat-input {
     margin-top: 15px;
     padding: 10px;

@@ -1,0 +1,9 @@
+Sat Jan 06 2024 00:45:14 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/roomDelete[delete], Message: TypeError: Cannot read properties of undefined (reading 'toString')} 
+
+Sat Jan 06 2024 00:47:49 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/roomDelete[delete], Message: TypeError: Cannot read properties of undefined (reading 'toString')} 
+
+Sat Jan 06 2024 00:47:55 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/roomDelete[delete], Message: TypeError: Cannot read properties of undefined (reading 'toString')} 
+

@@ -19,13 +19,19 @@
         <%- include('nav.ejs', user) %>
 
         <%= JSON.stringify(result) %>
-
+        <%= JSON.stringify(chatData) %>
         <div class="detail-bg">
-
             <div class="chat-screen">
-                <div class="chat-box"><span>안녕하세요</span></div>
-                <div class="chat-box"><span>안녕하세요</span></div>
-                <div class="chat-box mine"><span>안녕하세요</span></div>
+                <div class="chat-box mine"><span class="chat-time">2024-01-06 01:09:11</span><span>안녕하세요</span></div>
+                <div class="chat-box"><span>안녕하세요</span><span class="chat-time">2024-01-06 01:09:11</span></div>
+            <% chatData.forEach(function(data){ %>
+                <% if(data.writerId.toString() === user._id.toString()) { %>
+                    <div class="chat-box mine"><span>안녕하세요</span></div>
+                <% } else { %>
+                    <div class="chat-box"><span>안녕하세요</span></div>
+                    <div class="chat-box"><span>안녕하세요</span></div>
+                <% } %>
+            <% }); %>
             </div>
         </div>
         <div class="chat-form">
@@ -38,5 +44,9 @@
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"
         ></script>
+
+        <script>
+            
+        </script>
     </body>
 </html>

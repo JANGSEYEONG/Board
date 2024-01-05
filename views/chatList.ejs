@@ -19,16 +19,15 @@
         <%- include('nav.ejs', user) %>
 
         <div class="white-bg">
-
             <% chatList.forEach((x)=>{ %>
-                <div class="list-box">
-                    <h4>
-                        <a href="/chat/detail/<%= x._id %>"><span class="badge bg-secondary "><%= x.partnerNick %> 님과의 채팅방</span></a>
-                    </h4>
-                    <p>생성 일시 : <%= x.date %></p>
-                </div>
+            <div class="list-box">
+                <h4>
+                    <a href="/chat/detail/<%= x._id %>"><span class="badge bg-secondary"><%= x.partnerNick %> 님과의 채팅방</span></a>
+                    <span data-partner="<%= x.partnerNick %>" data-id="<%= x._id %>" class="btnDelRoom">🗑️</span>
+                </h4>
+                <p>생성 일시 : <%= x.date %></p>
+            </div>
             <% }) %>
-
         </div>
 
         <script
@@ -36,5 +35,31 @@
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"
         ></script>
+
+        <script>
+            const btnDelChatRooms = document.querySelectorAll('.btnDelRoom');
+            btnDelChatRooms.forEach((btn) => {
+                btn.addEventListener('click', function (e) {
+                    let result = confirm(`${this.dataset.partner}님과의 채팅방을 삭제하시겠습니까?`);
+                    if (result) {
+                        //예
+                        axios
+                            .delete(`/chat/roomDelete?id=${this.dataset.id}`)
+                            .then((r)=>{                  
+                                // 200 : 삭제 완료              
+                                alert(r.data);
+                                
+                                // 태그 display:none
+                                this.parentElement.parentElement.style.display = 'none';
+                            })
+                            .catch((e)=>{
+                                // 400 : 잘못된 요청입니다
+                                alert(e.response.data);
+                                console.log(e);
+                            });
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

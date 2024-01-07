@@ -16,27 +16,24 @@
     </head>
 
     <body class="grey-bg">
-        <%- include('nav.ejs', user) %>
-
-        <%= JSON.stringify(result) %>
-        <%= JSON.stringify(chatData) %>
+        <%- include('nav.ejs', user) %> <%= JSON.stringify(result) %> <%= JSON.stringify(chatData) %>
+        <div id="divUserInfo" style="display : none" data-user = "<%= JSON.stringify(user) %>"></div>
         <div class="detail-bg">
-            <div class="chat-screen">
+            <div id="divChatContaier" class="chat-screen">
                 <div class="chat-box mine"><span class="chat-time">2024-01-06 01:09:11</span><span>안녕하세요</span></div>
                 <div class="chat-box"><span>안녕하세요</span><span class="chat-time">2024-01-06 01:09:11</span></div>
-            <% chatData.forEach(function(data){ %>
-                <% if(data.writerId.toString() === user._id.toString()) { %>
-                    <div class="chat-box mine"><span>안녕하세요</span></div>
+                <% chatData.forEach(function(data){ %> <% if(data.writerId.toString() === user._id.toString()) { %>
+                <div class="chat-box mine"><span>안녕하세요</span></div>
                 <% } else { %>
-                    <div class="chat-box"><span>안녕하세요</span></div>
-                    <div class="chat-box"><span>안녕하세요</span></div>
-                <% } %>
-            <% }); %>
+                <div class="chat-box"><span>안녕하세요</span></div>
+                <div class="chat-box"><span>안녕하세요</span></div>
+                <% } %> <% }); %>
             </div>
         </div>
-        <div class="chat-form">
-            <input class="chat-input" />
-            <button class="chat-button">전송</button>
+
+        <div class="input-group mb-3" style="margin-top: 10px;">
+            <input id="chatInput" type="text" class="form-control" placeholder="메세지를 입력하세요." aria-label="메세지를 입력하세요." aria-describedby="button-addon2" />
+            <button class="btn btn-outline-secondary" type="button" id="btnChatSubmit" data-id="<%= result._id %>">전송</button>
         </div>
 
         <script
@@ -45,8 +42,78 @@
             crossorigin="anonymous"
         ></script>
 
+        <!--웹 소켓 연결-->
+        <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
         <script>
+            // 유저 정보 태그
+            const userInfo = JSON.parse(document.getElementById('divUserInfo').dataset.user);
+
+            // 소켓 연결
+            const socket = io();            
+
+            // 전송 클릭 이벤트
+            const btnSubmit = document.getElementById('btnChatSubmit');
+            const divChatContaier = document.getElementById('divChatContaier');
+            const inputChat = document.getElementById('chatInput');
             
+            btnSubmit.addEventListener('click', function(e){
+                // alert(3)
+                // divChatContaier.append("<div>3</div>");
+
+                // 전송 버튼 클릭 시
+
+                // 1. 현재 input에 담긴 value를 가져온다.
+                let msg = inputChat.value;
+                
+                if(msg.trim() === "") {
+                    alert("전송할 메세지가 비어있습니다.");
+                    return;
+                }
+                // 2. 서버로 데이터를 전송한다. (소켓 이용)
+                // 2-1) 해당 채팅방 id를 이름으로 가진 room에 join하는 요청을 보낸다.
+                //console.log(`<%= user._id %>`);
+                socket.emit('ask-join', 'CHAT'+this.dataset.id);
+                // 2-2) 메세지를 보낸다. (서버에서는 채팅을 뿌려줌과 동시에 db에 저장하는 과정을 가진다.)
+                socket.emit('send-msg-to-server', {room : this.dataset.id, msg : msg, user : userInfo});
+
+                // 3. 메세지창 초기화
+                inputChat.value = "";
+            });
+
+            // 서버에서 뿌려지는 소켓 데이터 받는 기능 
+            socket.on('send-msg-to-client', (data) => {
+                console.log(data);
+                // 받은 데이터를 html로 만들어 붙여준다.
+                appendChat(data);
+            });
+
+            const appendChat = (data, isMine)=>{
+                
+                if(data == null || data == undefined) return;
+
+                // 1. 기본 div 노드 생성
+                const divNode = document.createElement('div');
+
+                // 2. isMine에 따라 class를 다르게 붙여준다.
+                divNode.classList.add('chat-box');
+                if(data.writerId.toString() === userInfo._id.toString()){
+                    divNode.classList.add('mine');
+                }
+
+                // 3. SPAN, A태그와 메세지 붙여넣기.
+                if(data.writerId.toString() === userInfo._id.toString()){
+                    divNode.innerHTML = `<span class='chat-time'>${data.date}</span><span>${data.message}</span>`;
+                }else{
+                    divNode.innerHTML = `<span>${data.message}</span><span class='chat-time'>${data.date}</span>`;
+                }
+                
+
+                // 4. html 붙여 넣기
+                divChatContaier.appendChild(divNode);
+
+                // 5. 추가 시 스크롤 하단으로 넘겨주기
+                divChatContaier.scrollTop = divChatContaier.scrollHeight;
+            }
         </script>
     </body>
 </html>

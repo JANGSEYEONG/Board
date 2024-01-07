@@ -12,13 +12,68 @@ const express = require('express');
 const app = express();
 
 const DBURL = process.env.DB_URL;
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 const { Log } = require('./log.js');
 const middle = require('./middle.js');
 const session = require('express-session');
 
 const { passport } = require('./client/Passport.js');
+
+// 웹 소켓 관련
+const { createServer } = require("node:http");
+const { Server } = require('socket.io');
+const { join } = require("node:path");
+const server = createServer(app);
+const io = new Server(server);
+
+const moment = require('moment');
+
+// client에서 웹 소켓 연결 시 서버에서 코드 실행
+io.on('connection', (socket)=>{
+    //console.log(socket.request.session);
+
+    // socket.on('데이터이름', (data) => {
+    //     console.log('유저가 보낸거 : ', data)
+    // });
+
+    // room join
+    socket.on('ask-join', async (data) => {
+        console.log('ask-join : ', data);
+        socket.join(data);
+    });
+
+    // 채팅 추가 (client -> server)
+    socket.on('send-msg-to-server', async (data)=>{
+        console.log('send-msg-to-server : ', data);
+
+        // session에서 현재 요청한 방에 정말 속한 사용자인지 판단하기
+
+        // 채팅방 roomName은 CHAT + 채팅방_id
+        let roomName = 'CHAT'+ data.room;
+        let msg = data.msg;
+        let userInfo = data.user;
+
+        console.log(socket.request.session);
+        
+        // 1. DB에 메세지 저장
+        let date = moment().format('YYYY-MM-DD HH:mm:ss');
+        const insertQuery = {
+            parentChatRoomId : new ObjectId(data.room),
+            writerId : new ObjectId(userInfo._id), 
+            message : msg, 
+            date: date
+        };
+        // const result = await db.collection('chatMessage').insertOne(insertQuery);
+        // console.log(result);
+
+        // 2. room에 데이터 뿌려주기 (server->client)
+        io.to(roomName).emit('send-msg-to-client',insertQuery);
+    });
+
+    //io.emit('send-msg-to-client', '서버가 보낸 메세지');
+});
+
 
 // 로그 작성 관련 초기화
 Log.Init();
@@ -32,7 +87,8 @@ connectDB
         db = client.db('forum');
 
         //db 연결 성공해야 서버 띄우기
-        app.listen(PORT, () => {
+        // 웹 소켓 사용 시 app.listen -> server.listen 으로 수정
+        server.listen(PORT, () => {
             console.log('http://localhost:8080 에서 서버 실행중');
         });
     })
@@ -70,6 +126,10 @@ app.use(
 );
 
 app.use(passport.session());
+
+///////////////////////////////////////////
+//                router                 //
+///////////////////////////////////////////
 
 // 시작화면 설정
 app.get('/', middle.checkLogin, (req, res) => {

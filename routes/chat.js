@@ -106,14 +106,14 @@ router.get('/detail/:id', async (req, res) => {
         });
 
         // 1. 파라미터로 전달받은 chatRoomId를 parentRoomId로 가지고 있는 document를 가져온다.
-        const chatData = db.collection('chatMessage').find({
+        const chatData = await db.collection('chatMessage').find({
             parentChatRoomId  : new ObjectId(chatRoomId)
         }).toArray();
 
         let isMember = result.member.some(x => x.toString() === user._id.toString());
-
+        //console.log(chatData)
         if (isMember) {
-            res.render('chatDetail.ejs', { user: user, result: result, chatData : [] });
+            res.render('chatDetail.ejs', { user: user, result: result, chatData : chatData });
         } else {
             res.send('너의 채팅방이 아니란다');
         }

@@ -4,6 +4,7 @@ const { ObjectId } = require('mongodb');
 const { Log } = require('../log.js');
 const upload = require('../client/S3Client.js');
 const moment = require('moment');
+const Util = require('../scripts/util.js');
 
 let db;
 
@@ -105,18 +106,37 @@ router.get('/detail/:id', async (req, res) => {
             _id: new ObjectId(chatRoomId),
         });
 
-        // 1. 파라미터로 전달받은 chatRoomId를 parentRoomId로 가지고 있는 document를 가져온다.
+        // 1. 채팅방에 속한 멤버가 아니라면 return
+        let isMember = result.member.some(x => x.toString() === user._id.toString());
+        if(!isMember) return res.redirect('back');//res.send('너의 채팅방이 아니란다');
+
+        // 2. 파라미터로 전달받은 chatRoomId를 parentRoomId로 가지고 있는 document를 가져온다.
         const chatData = await db.collection('chatMessage').find({
             parentChatRoomId  : new ObjectId(chatRoomId)
         }).toArray();
+        
+        // 2-1) 데이터 가공
+        const sendChatData = chatData.reduce((acc, item, i, array)=>{
 
-        let isMember = result.member.some(x => x.toString() === user._id.toString());
-        //console.log(chatData)
-        if (isMember) {
-            res.render('chatDetail.ejs', { user: user, result: result, chatData : chatData });
-        } else {
-            res.send('너의 채팅방이 아니란다');
-        }
+            let chatDate = item.date.split(' ')[0];
+            let keyIdx = acc.findIndex(x=> x.date == chatDate);
+            
+            if(keyIdx > -1){
+                console.log()
+                acc[keyIdx].data.push(item)
+            }else{
+                acc.push({
+                    date : chatDate,
+                    data : [item]
+                })
+            }
+            return acc;
+        }, []);
+        console.log(sendChatData)
+
+        // 3. 채팅 상세페이지으로 이동
+        res.render('chatDetail.ejs', { user: user, result: result, chatData : sendChatData });
+        
     } catch (e) {
         Log.Write('chat/detail[GET]', e, true);
         return res.send('error: ' + e);

@@ -1,0 +1,66 @@
+Fri Jan 12 2024 18:21:56 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'split')} 
+
+Fri Jan 12 2024 18:22:08 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'split')} 
+
+Fri Jan 12 2024 18:22:39 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'toString')} 
+
+Fri Jan 12 2024 18:24:50 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'split')} 
+
+Fri Jan 12 2024 18:26:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: acc.some is not a function} 
+
+Fri Jan 12 2024 18:26:52 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: acc.push is not a function} 
+
+Fri Jan 12 2024 18:30:14 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'date')} 
+
+Fri Jan 12 2024 18:30:31 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'date')} 
+
+Fri Jan 12 2024 18:30:32 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'date')} 
+
+Fri Jan 12 2024 18:30:57 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'date')} 
+
+Fri Jan 12 2024 18:31:13 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'date')} 
+
+Fri Jan 12 2024 18:31:15 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'date')} 
+
+Fri Jan 12 2024 18:32:51 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'data')} 
+
+Fri Jan 12 2024 18:33:57 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'data')} 
+
+Fri Jan 12 2024 18:34:24 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'data')} 
+
+Fri Jan 12 2024 18:34:25 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'data')} 
+
+Fri Jan 12 2024 18:36:29 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: ReferenceError: hasDate is not defined} 
+
+Fri Jan 12 2024 18:38:24 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'data')} 
+
+Fri Jan 12 2024 18:39:08 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: Cannot read properties of undefined (reading 'data')} 
+
+Fri Jan 12 2024 18:39:58 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: console.log(...) is not a function} 
+
+Fri Jan 12 2024 18:40:40 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: acc[keyIdx].data.push is not a function} 
+
+Fri Jan 12 2024 18:41:08 GMT+0900 (대한민국 표준시)
+ {IsError: true, Method: chat/detail[GET], Message: TypeError: acc[keyIdx].data.push is not a function} 
+

@@ -15,14 +15,17 @@
 <body class="grey-bg">
     <%- include('nav.ejs', user) %>
         <!-- <%= JSON.stringify(result) %> <%= JSON.stringify(chatData) %> -->
-        <div id="divUserInfo" style="display : none" data-user="<%= JSON.stringify(user) %>"></div>
-        <div id="divRoomInfo" style="display : none" data-room="<%= JSON.stringify(result) %>"></div>
+        <div id="divInfo" style="display : none" data-user="<%= JSON.stringify(user) %>"
+            data-room="<%= JSON.stringify(result) %>" data-chat="<%= JSON.stringify(chatData) %>"></div>
+
         <div class="detail-bg">
             <div id="divChatContaier" class="chat-screen">
                 <% chatData.forEach(function(data){ %>
-                    <div style="background-color: lightgrey; margin-bottom: 10px; margin-top: 10px;"
-                        class="fw-bold text-center p-1 bg-opacity-10 border border-grey border-start-0 rounded-start rounded-end">
-                        <%= data.date %>
+                    <div>
+                        <div style="background-color: lightgrey; margin-bottom: 10px; margin-top: 10px;"
+                            class="fw-bold text-center p-1 bg-opacity-10 border border-grey border-start-0 rounded-start rounded-end">
+                            <%= data.date %>
+                        </div>
                     </div>
                     <% data.data.forEach(function(msg){ %>
                         <% let sendDate = msg.date.split(' ')[1]; %>
@@ -50,11 +53,20 @@
             <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
             <script>
 
-                // 유저 정보 태그
-                const userInfo = JSON.parse(document.getElementById('divUserInfo').dataset.user);
+                // 정보 태그
+                const divInfo = document.getElementById('divInfo');
 
-                // 채팅방 정보 태그
-                const roomInfo = JSON.parse(document.getElementById('divRoomInfo').dataset.room);
+                // 유저 정보
+                const userInfo = JSON.parse(divInfo.dataset.user);
+
+                // 채팅방 정보
+                const roomInfo = JSON.parse(divInfo.dataset.room);
+
+                // 기존 ChatData
+                const chatData = JSON.parse(divInfo.dataset.chat);
+
+                // 존재 날짜 배열
+                const chatDates = chatData.map(x=>x.date);
 
                 // 소켓 연결
                 const socket = io();
@@ -117,6 +129,26 @@
 
 
                     // 4. html 붙여 넣기
+
+                    // 4-1) 새로운 날짜라면 날짜 영역을 추가한 뒤 넣어준다.
+                    let pushDate = data.date.split(' ')[0];
+                    let checkDate = (x)=>{
+                        if(x.toString() === pushDate){
+                            return true;
+                        }
+                    }
+                    if(!chatDates.some(checkDate)){
+                        const dateNode = document.createElement('div');
+                        dateNode.innerHTML = `<div style="background-color: lightgrey; margin-bottom: 10px; margin-top: 10px;"
+                            class="fw-bold text-center p-1 bg-opacity-10 border border-grey border-start-0 rounded-start rounded-end">
+                            ${pushDate}
+                        </div>`
+                        divChatContaier.appendChild(dateNode);
+
+                        chatDates.push(pushDate);
+                    }
+
+                    // 4-2) 메세지를 붙여준다.
                     divChatContaier.appendChild(divNode);
 
                     // 5. 추가 시 스크롤 하단으로 넘겨주기

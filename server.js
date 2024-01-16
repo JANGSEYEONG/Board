@@ -135,13 +135,13 @@ io.on('connection', (socket) => {
             message: msg,
             date: date,
         };
-        const result = await db.collection('chatMessage').insertOne(insertQuery);
+        //const result = await db.collection('chatMessage').insertOne(insertQuery);
         //console.log(result);
 
         // 2. 저장에 성공한 경우 room에 데이터 뿌려주기 (server->client)
-        if(result.insertedId !== null && result.insertedId !== undefined){
+        //if(result.insertedId !== null && result.insertedId !== undefined){
             io.to(roomName).emit('send-msg-to-client', insertQuery);
-        }
+        //}
         
     });
 
